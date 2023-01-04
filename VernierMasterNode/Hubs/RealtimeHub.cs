@@ -7,12 +7,19 @@ namespace VernierMasterNode.Hubs;
 public class RealtimeHub : Hub<IRealtimeClient>
 {
     private readonly CommandService _commandService;
+    private readonly DeviceService _deviceService;
 
     private static readonly HashSet<string> _groups = new HashSet<string>();
 
-    public RealtimeHub(CommandService commandService, EventService eventService)
+    public RealtimeHub(CommandService commandService, EventService eventService, DeviceService deviceService)
     {
         _commandService = commandService;
+        _deviceService = deviceService;
+    }
+
+    public async Task<List<string>> GetEspDevices()
+    {
+        return _deviceService.GetDevices().Select(x => x.Name).ToList();
     }
 
     public async void RegisterForEvents(string uid)

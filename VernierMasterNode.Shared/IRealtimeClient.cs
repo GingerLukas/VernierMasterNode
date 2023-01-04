@@ -16,5 +16,8 @@ namespace VernierMasterNode.Shared
         Task SensorInfo(string uid, ulong serialId, VernierSensor sensor);
 
         Task SensorValuesUpdated(string uid, ulong serialId, uint sensorId, SensorValuesPacket packet);
+
+        Task EspDeviceConnected(string uid);
+        Task EspDeviceDisconnected(string uid);
     }
 }

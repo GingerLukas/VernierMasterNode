@@ -22,9 +22,9 @@ public class DeviceService
         _eventService.ScanStarted += EventServiceOnScanStarted;
         _eventService.ScanStopped += EventServiceOnScanStopped;
         _eventService.DeviceFound += EventServiceOnDeviceFound;
-        _eventService.DeviceConnected += EventServiceOnDeviceConnected;
+        _eventService.DeviceConnectionSuccess += EventServiceOnDeviceConnectionSuccess;
         _eventService.SensorInfoObtained += EventServiceOnSensorInfoObtained;
-        
+
         _heartBeatTimer = new Timer(HeartBeatCallback, null, TimeSpan.Zero, TimeSpan.FromSeconds(5));
         _parserTimer = new Timer(ParserCallback, null, TimeSpan.Zero, TimeSpan.FromMilliseconds(100));
     }
@@ -45,14 +45,15 @@ public class DeviceService
         device.ConnectedDevices[serialId].Sensors[sensor.Id] = sensor;
     }
 
-    private void EventServiceOnDeviceConnected(string uid, ulong serialId, VernierDevice vernierDevice)
+    private void EventServiceOnDeviceConnectionSuccess(string uid, ulong serialId, VernierDevice vernierDevice)
     {
         EspDevice? device = GetDevice(uid);
         if (device == null)
         {
             return;
         }
-        device.ConnectedDevices.Add(serialId,vernierDevice);
+
+        device.ConnectedDevices[serialId] = vernierDevice;
     }
 
     private void EventServiceOnDeviceFound(string uid, ulong serialId)
@@ -73,6 +74,7 @@ public class DeviceService
         {
             return;
         }
+
         device.ScanEnabled = false;
     }
 
@@ -83,6 +85,7 @@ public class DeviceService
         {
             return;
         }
+
         device.ScanEnabled = true;
     }
 
@@ -154,5 +157,4 @@ public class DeviceService
 
         return device;
     }
-
 }

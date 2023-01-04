@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR.Client;
 using VernierMasterNode.Shared;
+using Windows.UI.Xaml.Controls;
 
 namespace VernierMasterNode.UWP;
 
@@ -13,6 +14,9 @@ public class Client : IRealtimeClient
     {
         _connection = new HubConnectionBuilder().WithUrl(new Uri("http://127.0.0.1:5153/Realtime"))
             .WithAutomaticReconnect().Build();
+        
+        _connection.On<string>(nameof(IRealtimeClient.EspDeviceConnected), EspDeviceConnected);
+        _connection.On<string>(nameof(IRealtimeClient.EspDeviceDisconnected), EspDeviceDisconnected);
 
         _connection.On<string>(nameof(IRealtimeClient.ScanStarted), ScanStarted);
         _connection.On<string>(nameof(IRealtimeClient.ScanStopped), ScanStopped);
@@ -35,7 +39,7 @@ public class Client : IRealtimeClient
     {
         await _connection.InvokeAsync(nameof(RegisterForEvents), uid);
     }
-    
+
 
     public async Task UnregisterFromEvents(string uid)
     {
@@ -75,57 +79,116 @@ public class Client : IRealtimeClient
 
     #region Remote
 
+    public async Task ScanStarted(string uid)
+    {
+        await OnScanStarted(uid);
+    }
+
+    public virtual async Task OnScanStarted(string uid)
+    {
+    }
+
+    public async Task ScanStopped(string uid)
+    {
+        await OnScanStopped(uid);
+    }
+
+    public virtual async Task OnScanStopped(string uid)
+    {
+    }
+
+    public async Task DeviceConnectionSuccess(string uid, ulong serialId)
+    {
+        await OnDeviceConnectionSuccess(uid, serialId);
+    }
+
+    public virtual async Task OnDeviceConnectionSuccess(string uid, ulong serialId)
+    {
+    }
+
+    public async Task DeviceConnectionFailed(string uid, ulong serialId)
+    {
+        await OnDeviceConnectionFailed(uid, serialId);
+    }
+
+    public virtual async Task OnDeviceConnectionFailed(string uid, ulong serialId)
+    {
+    }
+
+    public async Task DeviceDisconnected(string uid, ulong serialId)
+    {
+        await OnDeviceDisconnected(uid, serialId);
+    }
+
+    public virtual async Task OnDeviceDisconnected(string uid, ulong serialId)
+    {
+    }
+
+    public async Task DeviceFound(string uid, ulong serialId)
+    {
+        await OnDeviceFound(uid, serialId);
+    }
+
+    public virtual async Task OnDeviceFound(string uid, ulong serialId)
+    {
+    }
+
+    public async Task SensorStarted(string uid, ulong serialId, uint sensorId)
+    {
+        await OnSensorStarted(uid, serialId, sensorId);
+    }
+
+    public virtual async Task OnSensorStarted(string uid, ulong serialId, uint sensorId)
+    {
+    }
+
+    public async Task SensorsStopped(string uid, ulong serialId)
+    {
+        await OnSensorsStopped(uid, serialId);
+    }
+
+    public virtual async Task OnSensorsStopped(string uid, ulong serialId)
+    {
+    }
+
+    public async Task SensorInfo(string uid, ulong serialId, VernierSensor sensor)
+    {
+        await OnSensorInfo(uid, serialId, sensor);
+    }
+
+
+    public virtual async Task OnSensorInfo(string uid, ulong serialId, VernierSensor sensor)
+    {
+    }
+
+    public async Task SensorValuesUpdated(string uid, ulong serialId, uint sensorId, SensorValuesPacket packet)
+    {
+        await OnSensorValuesUpdated(uid, serialId, sensorId, packet);
+    }
+
     
 
-
-    public Task ScanStarted(string uid)
+    public virtual async Task OnSensorValuesUpdated(string uid, ulong serialId, uint sensorId, SensorValuesPacket packet)
     {
-        throw new System.NotImplementedException();
+    }
+    
+    public async Task EspDeviceConnected(string uid)
+    {
+        await OnEspDeviceConnected(uid);
+    }
+    
+    public virtual async Task OnEspDeviceConnected(string uid)
+    {
     }
 
-    public Task ScanStopped(string uid)
+    public async Task EspDeviceDisconnected(string uid)
     {
-        throw new System.NotImplementedException();
+        await OnEspDeviceDisconnected(uid);
+    }
+    
+    public virtual async Task OnEspDeviceDisconnected(string uid)
+    {
     }
 
-    public Task DeviceConnectionSuccess(string uid, ulong serialId)
-    {
-        throw new System.NotImplementedException();
-    }
-
-    public Task DeviceConnectionFailed(string uid, ulong serialId)
-    {
-        throw new System.NotImplementedException();
-    }
-
-    public Task DeviceDisconnected(string uid, ulong serialId)
-    {
-        throw new System.NotImplementedException();
-    }
-
-    public Task DeviceFound(string uid, ulong serialId)
-    {
-        throw new System.NotImplementedException();
-    }
-
-    public Task SensorStarted(string uid, ulong serialId, uint sensorId)
-    {
-        throw new System.NotImplementedException();
-    }
-
-    public Task SensorsStopped(string uid, ulong serialId)
-    {
-        throw new System.NotImplementedException();
-    }
-
-    public Task SensorInfo(string uid, ulong serialId, VernierSensor sensor)
-    {
-        throw new System.NotImplementedException();
-    }
-
-    public Task SensorValuesUpdated(string uid, ulong serialId, uint sensorId, SensorValuesPacket packet)
-    {
-        throw new System.NotImplementedException();
-    }
     #endregion
 }

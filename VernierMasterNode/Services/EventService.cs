@@ -30,12 +30,24 @@ public class EventService : VernierTcpService
         ScanStarted += OnScanStarted;
         ScanStopped += OnScanStopped;
         DeviceFound += OnDeviceFound;
-        DeviceConnected += OnDeviceConnected;
+        DeviceConnectionSuccess += OnDeviceConnectionSuccess;
+        DeviceConnectionFailed += OnDeviceConnectionFailed;
+        DeviceDisconnected += OnDeviceDisconnected;
         SensorInfoObtained += OnSensorInfoObtained;
         SensorStarted += OnSensorStarted;
         SensorsStopped += OnSensorsStopped;
         EspDevice.SensorValuesUpdated += EspDeviceOnSensorValuesUpdated;
         _parserTimer = new Timer(ParserTick, null, 0, 100);
+    }
+
+    private void OnDeviceDisconnected(string uid, ulong serialid)
+    {
+        _hubContext.Clients.Group(uid).DeviceDisconnected(uid, serialid);
+    }
+
+    private void OnDeviceConnectionFailed(string uid, ulong serialid)
+    {
+        _hubContext.Clients.Group(uid).DeviceConnectionFailed(uid, serialid);
     }
 
     private void EspDeviceOnSensorValuesUpdated(string uid, ulong serialid, uint sensorid, SensorValuesPacket valuespacket)
@@ -59,7 +71,7 @@ public class EventService : VernierTcpService
         _hubContext.Clients.Group(uid).SensorInfo(uid, serialid, sensor);
     }
 
-    private void OnDeviceConnected(string uid, ulong serialid, VernierDevice vernierdevice)
+    private void OnDeviceConnectionSuccess(string uid, ulong serialid, VernierDevice vernierdevice)
     {
         _hubContext.Clients.Group(uid).DeviceConnectionSuccess(uid, serialid);
     }
@@ -91,7 +103,9 @@ public class EventService : VernierTcpService
     public event EspDeviceEventHandler ScanStarted;
     public event EspDeviceEventHandler ScanStopped;
     public event VernierDeviceEventHandler DeviceFound;
-    public event VernierDeviceConnectedEventHandler DeviceConnected;
+    public event VernierDeviceConnectedEventHandler DeviceConnectionSuccess;
+    public event VernierDeviceEventHandler DeviceConnectionFailed;
+    public event VernierDeviceEventHandler DeviceDisconnected;
     public event VernierSensorEventHandler SensorInfoObtained;
     public event VernierSensorSimpleEventHandler SensorStarted;
     public event VernierDeviceEventHandler SensorsStopped;
@@ -174,14 +188,16 @@ public class EventService : VernierTcpService
                             }
                         }
 
-                        DeviceConnected?.Invoke(uid, serialId, vernierDevice);
+                        DeviceConnectionSuccess?.Invoke(uid, serialId, vernierDevice);
 
                         break;
                     case EVernierEvent.DeviceConnectionFailed:
                         serialId = reader.ReadUInt64();
+                        DeviceConnectionFailed?.Invoke(uid,serialId);
                         break;
                     case EVernierEvent.DeviceDisconnected:
                         serialId = reader.ReadUInt64();
+                        DeviceDisconnected?.Invoke(uid,serialId);
                         break;
                     case EVernierEvent.DeviceFound:
                         serialId = reader.ReadUInt64();
