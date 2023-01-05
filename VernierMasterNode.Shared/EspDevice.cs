@@ -6,7 +6,7 @@ namespace VernierMasterNode.Shared
 {
     public class EspDevice
     {
-        public static double Timeout = 25000;
+        public static double Timeout = 10000;
         public string Name { get; private set; }
         private DateTime _lastHeartBeat;
 
@@ -36,8 +36,6 @@ namespace VernierMasterNode.Shared
 
         public bool CheckAlive()
         {
-            //TODO: remove DEBUG only
-            return true;
             return ((DateTime.Now - _lastHeartBeat).TotalMilliseconds < Timeout);
         }
 

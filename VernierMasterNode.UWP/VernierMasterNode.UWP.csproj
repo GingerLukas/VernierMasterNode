@@ -125,7 +125,6 @@
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RealtimeClient.cs" />
     <Compile Include="VernierClient.xaml.cs">
       <DependentUpon>VernierClient.xaml</DependentUpon>
     </Compile>

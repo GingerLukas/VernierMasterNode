@@ -12,11 +12,16 @@ public abstract class VernierTcpService : IDisposable
     private Thread _recieveThread;
     private CancellationTokenSource _tokenSource;
     private CancellationToken _token;
-    private Dictionary<string,Socket> _sockets = new Dictionary<string, Socket>();
+    private Dictionary<string, Socket> _sockets = new Dictionary<string, Socket>();
+
+    private delegate void DeviceDisconnectedHandler(string uid);
+
+    private static event DeviceDisconnectedHandler DeviceDisconnected;
 
 
     public VernierTcpService(int port)
     {
+        DeviceDisconnected += OnDeviceDisconnected;
         _tokenSource = new CancellationTokenSource();
         _token = _tokenSource.Token;
         _mainSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
@@ -30,6 +35,26 @@ public abstract class VernierTcpService : IDisposable
 
         _acceptThread.Start();
         _recieveThread.Start();
+    }
+
+    public static void DisconnectDevice(string uid)
+    {
+        DeviceDisconnected?.Invoke(uid);
+    }
+
+    private void OnDeviceDisconnected(string uid)
+    {
+        lock (_sockets)
+        {
+            Socket? socket = GetSocket(uid);
+            if (socket == null)
+            {
+                return;
+            }
+
+            _sockets.Remove(uid);
+            socket.Dispose();
+        }
     }
 
     protected Socket? GetSocket(string uid)
@@ -47,20 +72,34 @@ public abstract class VernierTcpService : IDisposable
 
     private void ReceiveThreadLoop()
     {
+        ParallelOptions options = new ParallelOptions()
+        {
+            MaxDegreeOfParallelism = Environment.ProcessorCount
+        };
         while (!_tokenSource.IsCancellationRequested)
         {
             lock (_sockets)
             {
-                foreach ((string uid, Socket socket) in _sockets)
+                List<string> toRemove = new List<string>();
+                Parallel.ForEach(_sockets, options, pair =>
                 {
+                    string uid = pair.Key;
+                    Socket socket = pair.Value;
+
                     if (!socket.Connected)
                     {
-                        continue;
+                        lock (toRemove)
+                        {
+                            toRemove.Add(uid);
+                        }
+
+                        return;
                     }
+
                     int len = socket.Available;
                     if (len < 4)
                     {
-                        continue;
+                        return;
                     }
 
                     byte[] packetLenBin = new byte[4];
@@ -76,6 +115,14 @@ public abstract class VernierTcpService : IDisposable
                     socket.ReceiveAsync(packet).GetAwaiter().GetResult();
                     PacketReceived(uid, packet);
                     var r = 0;
+                });
+                lock (toRemove)
+                {
+                    foreach (string uid in toRemove)
+                    {
+                        _sockets[uid].Dispose();
+                        _sockets.Remove(uid);
+                    }
                 }
             }
         }
@@ -89,7 +136,7 @@ public abstract class VernierTcpService : IDisposable
         while (!_token.IsCancellationRequested)
         {
             Socket socket = _mainSocket.Accept();
-            while (socket.Available<12)
+            while (socket.Available < 12)
             {
                 Thread.Sleep(1);
             }
@@ -106,10 +153,11 @@ public abstract class VernierTcpService : IDisposable
     public void Dispose()
     {
         _tokenSource.Cancel();
-        foreach (KeyValuePair<string,Socket> pair in _sockets)
+        foreach (KeyValuePair<string, Socket> pair in _sockets)
         {
             pair.Value.Dispose();
         }
+
         _mainSocket.Dispose();
     }
 }

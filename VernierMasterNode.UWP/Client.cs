@@ -81,114 +81,110 @@ public class Client : IRealtimeClient
 
     public async Task ScanStarted(string uid)
     {
-        await OnScanStarted(uid);
+        OnScanStarted?.Invoke(uid);
     }
 
-    public virtual async Task OnScanStarted(string uid)
-    {
-    }
+    public delegate void OnScanStartedHandler(string uid);
+    public event OnScanStartedHandler OnScanStarted;
 
     public async Task ScanStopped(string uid)
     {
-        await OnScanStopped(uid);
+        OnScanStopped?.Invoke(uid);
     }
 
-    public virtual async Task OnScanStopped(string uid)
-    {
-    }
+    public delegate void OnScanStoppedHandler(string uid);
+    public event OnScanStoppedHandler OnScanStopped;
 
     public async Task DeviceConnectionSuccess(string uid, ulong serialId)
     {
-        await OnDeviceConnectionSuccess(uid, serialId);
+        OnDeviceConnectionSuccess?.Invoke(uid, serialId);
     }
 
-    public virtual async Task OnDeviceConnectionSuccess(string uid, ulong serialId)
-    {
-    }
+    public delegate void OnDeviceConnectionSuccessHandler(string uid, ulong serialId);
+    public event OnDeviceConnectionSuccessHandler OnDeviceConnectionSuccess;
 
     public async Task DeviceConnectionFailed(string uid, ulong serialId)
     {
-        await OnDeviceConnectionFailed(uid, serialId);
+        OnDeviceConnectionFailed?.Invoke(uid, serialId);
     }
 
-    public virtual async Task OnDeviceConnectionFailed(string uid, ulong serialId)
-    {
-    }
+    public delegate void OnDeviceConnectionFailedHandler(string uid, ulong serialId);
+
+    public event OnDeviceConnectionFailedHandler OnDeviceConnectionFailed;
 
     public async Task DeviceDisconnected(string uid, ulong serialId)
     {
-        await OnDeviceDisconnected(uid, serialId);
+        OnDeviceDisconnected?.Invoke(uid, serialId);
     }
 
-    public virtual async Task OnDeviceDisconnected(string uid, ulong serialId)
-    {
-    }
+    public delegate void OnDeviceDisconnectedHandler(string uid, ulong serialId);
+
+    public event OnDeviceDisconnectedHandler OnDeviceDisconnected;
 
     public async Task DeviceFound(string uid, ulong serialId)
     {
-        await OnDeviceFound(uid, serialId);
+        OnDeviceFound?.Invoke(uid, serialId);
     }
 
-    public virtual async Task OnDeviceFound(string uid, ulong serialId)
-    {
-    }
+    public delegate void OnDeviceFoundHandler(string uid, ulong serialId);
+
+    public event OnDeviceFoundHandler OnDeviceFound;
 
     public async Task SensorStarted(string uid, ulong serialId, uint sensorId)
     {
-        await OnSensorStarted(uid, serialId, sensorId);
+        OnSensorStarted?.Invoke(uid, serialId, sensorId);
     }
 
-    public virtual async Task OnSensorStarted(string uid, ulong serialId, uint sensorId)
-    {
-    }
+    public delegate void OnSensorStartedHandler(string uid, ulong serialId, uint sensorId);
+
+    public event OnSensorStartedHandler OnSensorStarted;
 
     public async Task SensorsStopped(string uid, ulong serialId)
     {
-        await OnSensorsStopped(uid, serialId);
+        OnSensorsStopped?.Invoke(uid, serialId);
     }
 
-    public virtual async Task OnSensorsStopped(string uid, ulong serialId)
-    {
-    }
+    public delegate void OnSensorsStoppedHandler(string uid, ulong serialId);
+
+    public event OnSensorsStoppedHandler OnSensorsStopped;
 
     public async Task SensorInfo(string uid, ulong serialId, VernierSensor sensor)
     {
-        await OnSensorInfo(uid, serialId, sensor);
+        OnSensorInfo?.Invoke(uid, serialId, sensor);
     }
 
 
-    public virtual async Task OnSensorInfo(string uid, ulong serialId, VernierSensor sensor)
-    {
-    }
+    public delegate void OnSensorInfoHandler(string uid, ulong serialId, VernierSensor sensor);
+
+    public event OnSensorInfoHandler OnSensorInfo;
 
     public async Task SensorValuesUpdated(string uid, ulong serialId, uint sensorId, SensorValuesPacket packet)
     {
-        await OnSensorValuesUpdated(uid, serialId, sensorId, packet);
+        OnSensorValuesUpdated?.Invoke(uid, serialId, sensorId, packet);
     }
 
-    
 
-    public virtual async Task OnSensorValuesUpdated(string uid, ulong serialId, uint sensorId, SensorValuesPacket packet)
-    {
-    }
+
+    public delegate void OnSensorValuesUpdatedHandler(string uid, ulong serialId, uint sensorId, SensorValuesPacket packet);
+
+    public event OnSensorValuesUpdatedHandler OnSensorValuesUpdated;
     
     public async Task EspDeviceConnected(string uid)
     {
-        await OnEspDeviceConnected(uid);
+        OnEspDeviceConnected?.Invoke(uid);
     }
-    
-    public virtual async Task OnEspDeviceConnected(string uid)
-    {
-    }
+
+    public delegate void OnEspDeviceConnectedHandler(string uid);
+
+    public event OnEspDeviceConnectedHandler OnEspDeviceConnected;
 
     public async Task EspDeviceDisconnected(string uid)
     {
-        await OnEspDeviceDisconnected(uid);
+        OnEspDeviceDisconnected?.Invoke(uid);
     }
-    
-    public virtual async Task OnEspDeviceDisconnected(string uid)
-    {
-    }
+
+    public delegate void OnEspDeviceDisconnectedHandler(string uid);
+    public event OnEspDeviceDisconnectedHandler OnEspDeviceDisconnected;
 
     #endregion
 }

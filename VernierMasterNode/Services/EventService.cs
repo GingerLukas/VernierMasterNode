@@ -37,6 +37,7 @@ public class EventService : VernierTcpService
         SensorStarted += OnSensorStarted;
         SensorsStopped += OnSensorsStopped;
         EspDevice.SensorValuesUpdated += EspDeviceOnSensorValuesUpdated;
+        
         _parserTimer = new Timer(ParserTick, null, 0, 100);
     }
 

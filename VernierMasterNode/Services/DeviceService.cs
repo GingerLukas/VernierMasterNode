@@ -1,9 +1,13 @@
-﻿using VernierMasterNode.Shared;
+﻿using Microsoft.AspNetCore.SignalR;
+using VernierMasterNode.Hubs;
+using VernierMasterNode.Shared;
 
 namespace VernierMasterNode.Services;
 
 public class DeviceService
 {
+    
+    private readonly IHubContext<RealtimeHub, IRealtimeClient> _hubContext;
     private readonly Dictionary<string, EspDevice> _espDevices = new Dictionary<string, EspDevice>();
     private readonly Timer _heartBeatTimer;
     private readonly Timer _parserTimer;
@@ -15,18 +19,33 @@ public class DeviceService
 
     private readonly EventService _eventService;
 
-    public DeviceService(EventService eventService)
+    public DeviceService(EventService eventService, IHubContext<RealtimeHub, IRealtimeClient> hubContext)
     {
         _eventService = eventService;
+        _hubContext = hubContext;
 
         _eventService.ScanStarted += EventServiceOnScanStarted;
         _eventService.ScanStopped += EventServiceOnScanStopped;
         _eventService.DeviceFound += EventServiceOnDeviceFound;
         _eventService.DeviceConnectionSuccess += EventServiceOnDeviceConnectionSuccess;
         _eventService.SensorInfoObtained += EventServiceOnSensorInfoObtained;
+        
+        DeviceAdded += OnDeviceAdded;
+        DeviceRemoved += OnDeviceRemoved;
 
-        _heartBeatTimer = new Timer(HeartBeatCallback, null, TimeSpan.Zero, TimeSpan.FromSeconds(5));
+        _heartBeatTimer = new Timer(HeartBeatCallback, null, TimeSpan.Zero, TimeSpan.FromMilliseconds(100));
         _parserTimer = new Timer(ParserCallback, null, TimeSpan.Zero, TimeSpan.FromMilliseconds(100));
+    }
+
+    private void OnDeviceRemoved(EspDevice device)
+    {
+        VernierTcpService.DisconnectDevice(device.Name);
+        _hubContext.Clients.All.EspDeviceDisconnected(device.Name);
+    }
+
+    private void OnDeviceAdded(EspDevice device)
+    {
+        _hubContext.Clients.All.EspDeviceConnected(device.Name);
     }
 
     public List<EspDevice> GetDevices()
