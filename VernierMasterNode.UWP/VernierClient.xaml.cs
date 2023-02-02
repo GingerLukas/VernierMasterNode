@@ -105,7 +105,7 @@ namespace VernierMasterNode.UWP
                 lock (_values)
                 {
                     _sum += packet.Values.Sum();
-                    _count += packet.Values.Count;
+                    _count += packet.Values.Length;
                 }
             }
         }

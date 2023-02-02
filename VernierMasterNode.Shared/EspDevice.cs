@@ -94,7 +94,7 @@ namespace VernierMasterNode.Shared
 
                             bool isInts = reader.ReadByte() != 0;
                             byte valueCount = reader.ReadByte();
-                            SensorValuesPacket packet = new SensorValuesPacket() { IsInts = isInts };
+                            SensorValuesPacket packet = new SensorValuesPacket(valueCount,isInts);
                             for (int k = 0; k < valueCount; k++)
                             {
                                 if (isInts)
