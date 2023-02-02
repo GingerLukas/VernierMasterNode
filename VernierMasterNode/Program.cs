@@ -1,4 +1,3 @@
-using VernierMasterNode;
 using VernierMasterNode.Hubs;
 using VernierMasterNode.Services;
 

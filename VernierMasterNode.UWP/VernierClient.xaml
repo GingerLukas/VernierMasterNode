@@ -5,17 +5,19 @@
     xmlns:local="using:VernierMasterNode.UWP"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:charting="using:WinRTXamlToolkit.Controls.DataVisualization.Charting"
     mc:Ignorable="d"
     d:DesignHeight="300"
     d:DesignWidth="400">
 
     <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="2*"></ColumnDefinition>
-            <ColumnDefinition Width="*"></ColumnDefinition>
-        </Grid.ColumnDefinitions>
-        <StackPanel Name="EspDevicesStackPanel">
-            <TextBlock Text="Hello world"></TextBlock>
-        </StackPanel>
+        <charting:Chart>
+            <charting:LineSeries Name="LineSeries" 
+                                 Title="Conductivity"
+                                 IndependentValuePath="Index" 
+                                 DependentValuePath="Value"
+                                 IsSelectionEnabled="True">
+            </charting:LineSeries>
+        </charting:Chart>
     </Grid>
 </UserControl>

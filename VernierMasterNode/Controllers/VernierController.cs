@@ -1,7 +1,4 @@
-﻿using System.Net;
-using System.Net.Sockets;
-using System.Text;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using VernierMasterNode.Services;
 using VernierMasterNode.Shared;
 
@@ -11,14 +8,12 @@ namespace VernierMasterNode.Controllers;
 [Route("[controller]")]
 public class VernierController : ControllerBase
 {
-    private readonly IHttpContextAccessor _contextAccessor;
     private readonly DeviceService _deviceService;
     private readonly CommandService _commandService;
 
     public VernierController(IHttpContextAccessor contextAccessor, DeviceService deviceService,
         CommandService commandService)
     {
-        _contextAccessor = contextAccessor;
         _deviceService = deviceService;
         _commandService = commandService;
     }

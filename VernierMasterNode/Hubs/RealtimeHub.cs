@@ -11,15 +11,15 @@ public class RealtimeHub : Hub<IRealtimeClient>
 
     private static readonly HashSet<string> _groups = new HashSet<string>();
 
-    public RealtimeHub(CommandService commandService, EventService eventService, DeviceService deviceService)
+    public RealtimeHub(CommandService commandService, DeviceService deviceService)
     {
         _commandService = commandService;
         _deviceService = deviceService;
     }
 
-    public async Task<List<string>> GetEspDevices()
+    public IEnumerable<EspDevice> GetEspDevices()
     {
-        return _deviceService.GetDevices().Select(x => x.Name).ToList();
+        return _deviceService.GetDevices().ToList();
     }
 
     public async void RegisterForEvents(string uid)

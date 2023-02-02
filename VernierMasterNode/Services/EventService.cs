@@ -1,5 +1,4 @@
 ﻿using System.Text;
-using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.AspNetCore.SignalR;
 using VernierMasterNode.Hubs;
 using VernierMasterNode.Shared;
@@ -144,7 +143,7 @@ public class EventService : VernierTcpService
             string uid;
             lock (_eventDataQueue)
             {
-                if (_eventDataQueue.Count() == 0)
+                if (_eventDataQueue.Count == 0)
                 {
                     return;
                 }
@@ -181,6 +180,7 @@ public class EventService : VernierTcpService
 
                         VernierDevice vernierDevice = new VernierDevice(serialId);
                         UInt32 mask = reader.ReadUInt32();
+                        
                         for (int i = 0; i < 32; i++)
                         {
                             if (((mask >> i) & 1) == 1)
@@ -188,6 +188,8 @@ public class EventService : VernierTcpService
                                 vernierDevice.Sensors.Add(reader.ReadUInt32(), null);
                             }
                         }
+                        
+                        //TODO: find use for mask
 
                         DeviceConnectionSuccess?.Invoke(uid, serialId, vernierDevice);
 

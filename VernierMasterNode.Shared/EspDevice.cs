@@ -9,8 +9,10 @@ namespace VernierMasterNode.Shared
         public static double Timeout = 10000;
         public string Name { get; private set; }
         private DateTime _lastHeartBeat;
+        private readonly object _heartBeatLock = new object();
 
-        public delegate void SensorValuesUpdatedHandler(string uid, UInt64 serialId,UInt32 sensorId, SensorValuesPacket valuesPacket);
+        public delegate void SensorValuesUpdatedHandler(string uid, UInt64 serialId, UInt32 sensorId,
+            SensorValuesPacket valuesPacket);
 
         public static event SensorValuesUpdatedHandler SensorValuesUpdated;
 
@@ -31,12 +33,18 @@ namespace VernierMasterNode.Shared
 
         public void HeartBeat()
         {
-            _lastHeartBeat = DateTime.Now;
+            lock (_heartBeatLock)
+            {
+                _lastHeartBeat = DateTime.Now;
+            }
         }
 
         public bool CheckAlive()
         {
-            return ((DateTime.Now - _lastHeartBeat).TotalMilliseconds < Timeout);
+            lock (_heartBeatLock)
+            {
+                return ((DateTime.Now - _lastHeartBeat).TotalMilliseconds < Timeout);
+            }
         }
 
 
@@ -79,23 +87,10 @@ namespace VernierMasterNode.Shared
                     {
                         UInt64 serialId = reader.ReadUInt64();
 
-                        //TODO: remove, sensors and devices should be handled by separate socket
-                        VernierDevice device;
-                        if (!ConnectedDevices.TryGetValue(serialId, out device))
-                        {
-                            throw new Exception("device not connected");
-                        }
-
                         byte sensorCount = reader.ReadByte();
                         for (int j = 0; j < sensorCount; j++)
                         {
-                            //TODO: remove, sensors and devices should be handled by separate socket
-                            VernierSensor sensor;
                             UInt32 id = reader.ReadUInt32();
-                            if (!device.Sensors.TryGetValue(id, out sensor) || sensor == null)
-                            {
-                                throw new Exception("sensor not loaded");
-                            }
 
                             bool isInts = reader.ReadByte() != 0;
                             byte valueCount = reader.ReadByte();
@@ -114,8 +109,8 @@ namespace VernierMasterNode.Shared
 
                             if (valueCount > 0)
                             {
-                                sensor.Values.AddRange(packet.Values);
-                                SensorValuesUpdated?.Invoke(this.Name, serialId, sensor.Id, packet);
+                                //sensor.Values.AddRange(packet.Values);
+                                SensorValuesUpdated?.Invoke(this.Name, serialId, id, packet);
                             }
                         }
                     }

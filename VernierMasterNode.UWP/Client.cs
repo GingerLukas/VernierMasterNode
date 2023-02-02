@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR.Client;
 using VernierMasterNode.Shared;
@@ -33,6 +34,11 @@ public class Client : IRealtimeClient
             SensorValuesUpdated);
 
         _connection.StartAsync().GetAwaiter().GetResult();
+    }
+
+    public async Task<IEnumerable<EspDevice>> GetEspDevices()
+    {
+        return await _connection.InvokeAsync<IEnumerable<EspDevice>>(nameof(GetEspDevices));
     }
 
     public async Task RegisterForEvents(string uid)

@@ -1,4 +1,5 @@
-﻿using System.Net.Sockets;
+﻿using System.Diagnostics;
+using System.Net.Sockets;
 
 namespace VernierMasterNode.Services;
 
@@ -10,7 +11,6 @@ public class CommandService : VernierTcpService
 
     public void StartSensor(string uid, UInt64 serialId, UInt32 sensorId)
     {
-
         byte[] packet = new byte[1 + 1 + 8 + 4];
         packet[0] = (byte)packet.Length;
         packet[1] = (byte)ECommand.StartSensor;
@@ -20,6 +20,7 @@ public class CommandService : VernierTcpService
         {
             packet[i++] = b;
         }
+
         foreach (byte b in BitConverter.GetBytes(sensorId))
         {
             packet[i++] = b;
@@ -30,7 +31,6 @@ public class CommandService : VernierTcpService
 
     public void StopSensor(string uid, UInt64 serialId)
     {
-
         byte[] packet = new byte[1 + 1 + 8];
         packet[0] = (byte)packet.Length;
         packet[1] = (byte)ECommand.StopSensor;
@@ -46,7 +46,6 @@ public class CommandService : VernierTcpService
 
     public void ConnectToDevice(string uid, UInt64 serialId)
     {
-
         byte[] packet = new byte[1 + 1 + 8];
         packet[0] = (byte)packet.Length;
         packet[1] = (byte)ECommand.ConnectToDevice;
@@ -62,7 +61,6 @@ public class CommandService : VernierTcpService
 
     public void DisconnectFromDevice(string uid, UInt64 serialId)
     {
-
         byte[] packet = new byte[1 + 1 + 8];
         packet[0] = (byte)packet.Length;
         packet[1] = (byte)ECommand.DisconnectFromDevice;
@@ -104,11 +102,15 @@ public class CommandService : VernierTcpService
             return false;
         }
 
-        return socket.Send(data) == data.Length;
+        lock (socket)
+        {
+            return socket.Send(data) == data.Length;
+        }
     }
 
     protected override void PacketReceived(string uid, byte[] data)
     {
+        Debugger.Break();
     }
 }
 

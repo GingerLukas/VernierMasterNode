@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using System.Net;
+﻿using System.Net;
 using System.Net.Sockets;
 using System.Text;
 
@@ -104,15 +103,14 @@ public abstract class VernierTcpService : IDisposable
 
                     byte[] packetLenBin = new byte[4];
 
-                    socket.ReceiveAsync(packetLenBin).GetAwaiter().GetResult();
+                    
+                    SafeReceive(socket, ref packetLenBin);
+
                     UInt32 packetLen = BitConverter.ToUInt32(packetLenBin) - 4;
                     byte[] packet = new byte[packetLen];
-                    while (socket.Available < packetLen)
-                    {
-                        Thread.Sleep(1);
-                    }
-
-                    socket.ReceiveAsync(packet).GetAwaiter().GetResult();
+                    
+                    SafeReceive(socket, ref packet);
+                    
                     PacketReceived(uid, packet);
                     var r = 0;
                 });
@@ -125,6 +123,22 @@ public abstract class VernierTcpService : IDisposable
                     }
                 }
             }
+        }
+    }
+
+    private void SafeReceive(Socket socket, ref byte[] buffer)
+    {
+        try
+        {
+            while (socket.Available < buffer.Length)
+            {
+                Thread.Sleep(1);
+            }
+            socket.ReceiveAsync(buffer).GetAwaiter().GetResult();
+        }
+        catch (Exception e)
+        {
+            return;
         }
     }
 
