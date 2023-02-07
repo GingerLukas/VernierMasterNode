@@ -11,10 +11,37 @@
     d:DesignWidth="400">
 
     <Grid>
-        <charting:Chart>
-            <charting:LineSeries Name="LineSeries" 
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+        </Grid.RowDefinitions>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <TextBlock >Kapky: </TextBlock>
+            <TextBlock Grid.Column="1" Name="TextDropCountStatus"></TextBlock>
+
+        </Grid>
+        <Grid Grid.Row="0" Grid.Column="1">
+            
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <TextBlock >Vodivost: </TextBlock>
+            <TextBlock Grid.Column="1" Name="TextConductivityStatus"></TextBlock>
+
+        </Grid>
+        <charting:Chart Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2">
+            <charting:LineSeries Name="LineSeries"
                                  Title="Conductivity"
-                                 IndependentValuePath="Index" 
+                                 IndependentValuePath="Index"
                                  DependentValuePath="Value"
                                  IsSelectionEnabled="True">
             </charting:LineSeries>

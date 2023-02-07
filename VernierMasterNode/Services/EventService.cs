@@ -160,11 +160,10 @@ public class EventService : VernierTcpService
         using (MemoryStream stream = new MemoryStream(data))
         {
             stream.Position = 0;
-            UInt64 serialId;
             using (BinaryReader reader = new BinaryReader(stream))
             {
                 EVernierEvent type = (EVernierEvent)reader.ReadByte();
-                //TODO handle events
+                UInt64 serialId;
                 switch (type)
                 {
                     case EVernierEvent.Unknown:

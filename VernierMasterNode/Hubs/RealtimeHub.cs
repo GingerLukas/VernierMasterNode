@@ -9,8 +9,6 @@ public class RealtimeHub : Hub<IRealtimeClient>
     private readonly CommandService _commandService;
     private readonly DeviceService _deviceService;
 
-    private static readonly HashSet<string> _groups = new HashSet<string>();
-
     public RealtimeHub(CommandService commandService, DeviceService deviceService)
     {
         _commandService = commandService;
@@ -25,13 +23,11 @@ public class RealtimeHub : Hub<IRealtimeClient>
     public async void RegisterForEvents(string uid)
     {
         await Groups.AddToGroupAsync(Context.ConnectionId, uid);
-        _groups.Add(uid);
     }
 
     public async void UnregisterFromEvents(string uid)
     {
         await Groups.RemoveFromGroupAsync(Context.ConnectionId, uid);
-        _groups.Remove(uid);
     }
 
     public void StartScan(string uid)

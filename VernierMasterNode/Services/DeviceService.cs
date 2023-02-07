@@ -102,7 +102,10 @@ public class DeviceService
             return;
         }
 
-        espDevice.SeenDevices.Add(serialId);
+        lock (_infoLock)
+        {
+            espDevice.SeenDevices.Add(serialId);
+        }
     }
 
     private void EventServiceOnScanStopped(string uid)
@@ -133,7 +136,6 @@ public class DeviceService
         List<EspDevice> devices = _espDevices.Values.ToList();
         _devicesLock.ReleaseReaderLock();
         Parallel.ForEach(devices, (device) => { device.ParsePending(); });
-        
     }
 
 
@@ -144,13 +146,12 @@ public class DeviceService
         _devicesLock.ReleaseReaderLock();
         Parallel.ForEach(devices, device =>
         {
-            if (!device.CheckAlive())
-            {
-                _devicesLock.AcquireWriterLock(-1);
-                _espDevices.Remove(device.Name);
-                _devicesLock.ReleaseWriterLock();
-                DeviceRemoved?.Invoke(device);
-            }
+            if (device.CheckAlive()) return;
+            
+            _devicesLock.AcquireWriterLock(-1);
+            _espDevices.Remove(device.Name);
+            _devicesLock.ReleaseWriterLock();
+            DeviceRemoved?.Invoke(device);
         });
     }
 
@@ -161,7 +162,7 @@ public class DeviceService
             return;
         }
 
-        if (!_espDevices.TryGetValue(address, out EspDevice device))
+        if (!_espDevices.TryGetValue(address, out EspDevice? device))
         {
             device = new EspDevice(address);
             _devicesLock.AcquireWriterLock(-1);
@@ -181,10 +182,8 @@ public class DeviceService
 
     public EspDevice? GetDevice(string espAddress)
     {
-        EspDevice? device;
         _devicesLock.AcquireReaderLock(-1);
-        _espDevices.TryGetValue(espAddress, out device);
-
+        _espDevices.TryGetValue(espAddress, out EspDevice? device);
         _devicesLock.ReleaseReaderLock();
 
         return device;

@@ -24,8 +24,7 @@ public abstract class VernierTcpService : IDisposable
         _tokenSource = new CancellationTokenSource();
         _token = _tokenSource.Token;
         _mainSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-        IPAddress hostIP = (Dns.Resolve(IPAddress.Any.ToString())).AddressList[1];
-        IPEndPoint ep = new IPEndPoint(hostIP, port);
+        IPEndPoint ep = new IPEndPoint(IPAddress.Any, port);
         _mainSocket.Bind(ep);
         _mainSocket.Listen();
 
@@ -60,13 +59,9 @@ public abstract class VernierTcpService : IDisposable
     {
         lock (_sockets)
         {
-            if (_sockets.TryGetValue(uid, out Socket socket))
-            {
-                return socket;
-            }
+            _sockets.TryGetValue(uid, out Socket? socket);
+            return socket;
         }
-
-        return null;
     }
 
     private void ReceiveThreadLoop()
@@ -112,7 +107,6 @@ public abstract class VernierTcpService : IDisposable
                     SafeReceive(socket, ref packet);
                     
                     PacketReceived(uid, packet);
-                    var r = 0;
                 });
                 lock (toRemove)
                 {

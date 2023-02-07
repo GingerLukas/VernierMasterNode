@@ -6,8 +6,13 @@ namespace VernierMasterNode.Shared
     public class SensorValuesPacket
     {
         public bool IsInts { get; set; }
-        public decimal[] Values { get; }
+        public decimal[] Values { get; set; }
         private int _index = 0;
+
+        public SensorValuesPacket()
+        {
+            
+        }
 
         public SensorValuesPacket(int count, bool isInts)
         {

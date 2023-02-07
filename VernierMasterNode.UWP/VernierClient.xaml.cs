@@ -18,6 +18,7 @@ using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using VernierMasterNode.Shared;
 using System.Threading.Tasks;
+using Windows.UI.Core;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
@@ -45,6 +46,10 @@ namespace VernierMasterNode.UWP
         public VernierClient()
         {
             this.InitializeComponent();
+
+            SetStatus(TextConductivityStatus, "Not Found");
+            SetStatus(TextDropCountStatus, "Not Found");
+
             LineSeries.ItemsSource = _values;
             _client = new Client();
             _client.OnEspDeviceConnected += ClientOnOnEspDeviceConnected;
@@ -66,12 +71,13 @@ namespace VernierMasterNode.UWP
 
         private async void OnDrop()
         {
-            await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+            await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
                 if (_count > 0)
                 {
+                    _values.Add(new IndexValuePair(_values.Count, _sum / _count));
                 }
-                else if(_values.Count > 0)
+                else if (_values.Count > 0)
                 {
                     _values.Add(new IndexValuePair(_values.Count, _values.Last().Value));
                 }
@@ -87,6 +93,9 @@ namespace VernierMasterNode.UWP
             {
                 _client.StartSensor(uid, _deviceXserial, _deviceX.Id).GetAwaiter().GetResult();
                 _client.StartSensor(uid, _deviceYserial, _deviceY.Id).GetAwaiter().GetResult();
+
+                SetStatus(TextDropCountStatus, "OK");
+                SetStatus(TextConductivityStatus, "OK");
             }
         }
 
@@ -113,18 +122,31 @@ namespace VernierMasterNode.UWP
 
         bool _started = false;
 
+        private void SetStatus(TextBlock textBlock, string status)
+        {
+            Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            {
+                lock (textBlock)
+                {
+                    textBlock.Text = status;
+                }
+            });
+        }
+
         private void ClientOnOnSensorInfo(string uid, ulong serialid, VernierSensor sensor)
         {
             if (_deviceXid == sensor.Id)
             {
                 _deviceX = sensor;
                 _deviceXserial = serialid;
+                SetStatus(TextDropCountStatus, "Found");
             }
 
             if (_deviceYid == sensor.Id)
             {
                 _deviceY = sensor;
                 _deviceYserial = serialid;
+                SetStatus(TextConductivityStatus, "Found");
             }
 
             if (!_started && _deviceX != null && _deviceY != null)

@@ -4,13 +4,20 @@ using VernierMasterNode.Shared;
 
 namespace VernierMasterNode.Services;
 
-public class VernierUdpService
+public class VernierUdpService : IDisposable
 {
-    private Timer _timer;
+    private readonly Timer _timer;
+    private readonly Socket _socket;
+    private readonly IPEndPoint _endpoint;
+    private readonly byte[] _sendData;
 
     public VernierUdpService()
     {
-        _timer = new Timer(TimerCallback,null, TimeSpan.Zero, TimeSpan.FromMilliseconds(EspDevice.Timeout/10));
+        _sendData = "VernierMasterNode_Safranek"u8.ToArray();
+
+        _endpoint = new IPEndPoint(IPAddress.Parse("239.244.244.224"), 2442);
+        _socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
+        _timer = new Timer(TimerCallback, null, TimeSpan.Zero, TimeSpan.FromMilliseconds(EspDevice.Timeout / 10));
     }
 
     private void TimerCallback(object? state)
@@ -18,14 +25,14 @@ public class VernierUdpService
         SendUdpBroadcast();
     }
 
-    public void SendUdpBroadcast()
+    private void SendUdpBroadcast()
     {
-        using (Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp))
-        {
-            byte[] sendData = "VernierMasterNode_Safranek_Report to:5153"u8.ToArray();
-            IPEndPoint ep = new IPEndPoint(IPAddress.Parse("239.244.244.224"),  2442);
-            socket.SendTo(sendData, ep);
-        }
+        _socket.SendTo(_sendData, _endpoint);
     }
-    
+
+    public void Dispose()
+    {
+        _timer.Dispose();
+        _socket.Dispose();
+    }
 }

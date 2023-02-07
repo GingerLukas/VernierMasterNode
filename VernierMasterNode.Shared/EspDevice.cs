@@ -6,23 +6,33 @@ namespace VernierMasterNode.Shared
 {
     public class EspDevice
     {
+        #region Static
+
         public static double Timeout = 10000;
-        public string Name { get; private set; }
-        private DateTime _lastHeartBeat;
-        private readonly object _heartBeatLock = new object();
+
+        #endregion
+
+        #region Event
 
         public delegate void SensorValuesUpdatedHandler(string uid, UInt64 serialId, UInt32 sensorId,
             SensorValuesPacket valuesPacket);
 
         public static event SensorValuesUpdatedHandler SensorValuesUpdated;
 
+        #endregion
 
-        private Queue<byte[]> _dataQueue = new Queue<byte[]>();
-
+        public string Name { get; private set; }
         public Dictionary<UInt64, VernierDevice> ConnectedDevices { get; }
         public List<UInt64> SeenDevices { get; }
-
         public bool ScanEnabled { get; set; }
+        
+        
+        
+        private DateTime _lastHeartBeat;
+        private readonly object _heartBeatLock = new object();
+        
+        private Queue<byte[]> _dataQueue = new Queue<byte[]>();
+
 
         public EspDevice(string name)
         {
@@ -94,7 +104,7 @@ namespace VernierMasterNode.Shared
 
                             bool isInts = reader.ReadByte() != 0;
                             byte valueCount = reader.ReadByte();
-                            SensorValuesPacket packet = new SensorValuesPacket(valueCount,isInts);
+                            SensorValuesPacket packet = new SensorValuesPacket(valueCount, isInts);
                             for (int k = 0; k < valueCount; k++)
                             {
                                 if (isInts)
