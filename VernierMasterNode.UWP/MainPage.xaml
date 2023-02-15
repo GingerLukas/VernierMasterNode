@@ -9,6 +9,6 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Grid>
-        <local:VernierClient></local:VernierClient>
+        <Frame Name="MainFrame"></Frame>
     </Grid>
 </Page>

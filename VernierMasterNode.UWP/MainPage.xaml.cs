@@ -26,10 +26,22 @@ namespace VernierMasterNode.UWP
     /// </summary>
     public sealed partial class MainPage : Page
     {
+        private Page _selectHub;
+        private Page _selectSensors;
+        private Page _measurement;
+        private Page _result;
         public MainPage()
         {
             this.InitializeComponent();
+            MainFrame.Navigate(typeof(HubSelection));
+
+            HubSelection selection = MainFrame.Content as HubSelection;
+            selection.HubSelected += SelectionOnHubSelected;
         }
 
+        private void SelectionOnHubSelected(Client client)
+        {
+            MainFrame.Navigate(typeof(SensorSelection));
+        }
     }
 }

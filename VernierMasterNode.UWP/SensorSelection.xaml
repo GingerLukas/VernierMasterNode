@@ -1,0 +1,32 @@
+﻿<Page
+    x:Class="VernierMasterNode.UWP.SensorSelection"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:VernierMasterNode.UWP"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+        </Grid.RowDefinitions>
+        <TextBlock>Select sensors</TextBlock>
+    <Grid Grid.Row="1">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <StackPanel>
+            <TextBlock>Drop counter</TextBlock>
+            <ListBox Name="DropCounterListBox"></ListBox>
+        </StackPanel>
+        <StackPanel Grid.Column="1">
+            <TextBlock>Conductivity</TextBlock>
+            <ListBox Name="ConductivityListBox"></ListBox>
+        </StackPanel>
+    </Grid>
+    </Grid>
+</Page>
