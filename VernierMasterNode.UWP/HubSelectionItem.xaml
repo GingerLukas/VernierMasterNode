@@ -9,7 +9,7 @@
     d:DesignHeight="300"
     d:DesignWidth="400">
 
-    <Grid Padding="5">
+    <Grid Padding="5 0 0 0">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"></ColumnDefinition>
             <ColumnDefinition Width="*"></ColumnDefinition>
@@ -18,14 +18,10 @@
 
 
         <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xF22C;" Name="TypeIcon" />
-        <Viewbox Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center" Height="30">
-            <ScrollViewer>
-                <TextBlock  Name="IpAddress" VerticalAlignment="Center" Padding="5 0 0 0"></TextBlock>
-            </ScrollViewer>
-        </Viewbox>
+        <TextBlock Grid.Column="1" FontSize="20" Name="IpAddress" VerticalAlignment="Center" Padding="5 0 0 0"></TextBlock>
 
-        <Button Grid.Column="2" Name="ConnectButton" Click="ConnectButton_OnClick">
-            <SymbolIcon Name="StatusIcon" Symbol="Add"></SymbolIcon>
+        <Button Grid.Column="2" Name="ConnectButton" Click="ConnectButton_OnClick" Background="{ThemeResource SystemAccentColor}" CornerRadius="5">
+            <SymbolIcon Name="StatusIcon" Symbol="Add" Foreground="Black"></SymbolIcon>
         </Button>
     </Grid>
 </UserControl>

@@ -9,7 +9,7 @@
     d:DesignHeight="300"
     d:DesignWidth="400">
 
-    <Grid>
+    <Grid Padding="5 0 0 0">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"></ColumnDefinition>
             <ColumnDefinition Width="*"></ColumnDefinition>
@@ -17,13 +17,11 @@
         </Grid.ColumnDefinitions>
 
         <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xEB42;" Name="TypeIcon" />
-        <Viewbox Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center" Height="30">
-            <ScrollViewer>
-                <TextBlock Grid.Column="1" Name="SerialNumber" VerticalAlignment="Center" Padding="5 0 0 0"></TextBlock>
-            </ScrollViewer>
-        </Viewbox>
-        <Button Grid.Column="2" Name="SelectButton">
-            <SymbolIcon Name="StatusIcon" Symbol="Add"></SymbolIcon>
+
+        <TextBlock Grid.Column="1" FontSize="20" Name="SerialNumber" VerticalAlignment="Center" Padding="5 0 0 0"></TextBlock>
+
+        <Button Grid.Column="2" Name="SelectButton" Background="{ThemeResource SystemAccentColor}" CornerRadius="5">
+            <SymbolIcon Name="StatusIcon" Symbol="Add" Foreground="Black"></SymbolIcon>
         </Button>
     </Grid>
 </UserControl>

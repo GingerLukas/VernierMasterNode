@@ -11,20 +11,21 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"></RowDefinition>
-            <RowDefinition Height="5*"></RowDefinition>
+            <RowDefinition Height="6*"></RowDefinition>
             <RowDefinition Height="*"></RowDefinition>
         </Grid.RowDefinitions>
-        <!--
-        <Viewbox HorizontalAlignment="Left">
-            <ScrollViewer>
-                <TextBlock>Select hub</TextBlock>
-            </ScrollViewer>
-        </Viewbox>
-        !-->
-        <Grid Grid.Row="1">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+            <ColumnDefinition Width="4*"></ColumnDefinition>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+
+        <TextBlock Grid.ColumnSpan="3" FontSize="50" Padding="15">Select hub</TextBlock>
+
+        <Grid Grid.Row="1" Grid.Column="1">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"></ColumnDefinition>
-                <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition Width="2*"></ColumnDefinition>
                 <ColumnDefinition Width="*"></ColumnDefinition>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
@@ -32,21 +33,19 @@
                 <RowDefinition Height="auto"></RowDefinition>
             </Grid.RowDefinitions>
             <StackPanel Grid.Column="1" Orientation="Vertical">
-                <Viewbox HorizontalAlignment="Left">
-                    <ScrollViewer>
-                        <TextBlock>Available hubs on your network</TextBlock>
-                    </ScrollViewer>
-                </Viewbox>
+
+                <TextBlock FontSize="30">Available hubs on your network</TextBlock>
                 <StackPanel Name="HubListBox" Orientation="Vertical" HorizontalAlignment="Stretch" Spacing="5"
-                            Background="DimGray">
+                            Background="{ThemeResource SystemAccentColorDark2}" CornerRadius="5" Padding="5">
 
                 </StackPanel>
-                <Button HorizontalAlignment="Stretch">Don't see yours? Add it manually!</Button>
+                <Button HorizontalAlignment="Stretch" FontSize="15" CornerRadius="3" Margin="0 10 0 0">Don't see yours? Add it manually!</Button>
             </StackPanel>
 
-            <StackPanel Grid.Row="1" Grid.Column="1" HorizontalAlignment="Right">
-                <Button Name="ContinueButton" Click="ContinueButton_OnClick">Continue</Button>
-            </StackPanel>
+            
         </Grid>
+        <StackPanel Grid.Row="2" Grid.Column="1" HorizontalAlignment="Right">
+            <Button Name="ContinueButton" FontSize="24" Click="ContinueButton_OnClick" CornerRadius="5">Continue</Button>
+        </StackPanel>
     </Grid>
 </Page>

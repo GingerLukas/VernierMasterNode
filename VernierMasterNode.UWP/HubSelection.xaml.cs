@@ -26,7 +26,6 @@ namespace VernierMasterNode.UWP
     public sealed partial class HubSelection : Page, IDisposable
     {
         public delegate void HubSelectedHandler(Client client);
-
         public event HubSelectedHandler HubSelected;
         
         private readonly Thread _discoveryThread;

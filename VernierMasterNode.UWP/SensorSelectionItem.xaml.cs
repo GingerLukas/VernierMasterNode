@@ -29,15 +29,17 @@ namespace VernierMasterNode.UWP
             switch (sensorType)
             {
                 case EVernierSensorType.Drop:
-                    TypeIcon.Glyph = "&#xEB42";
+                    TypeIcon.Glyph = "\uEB42";
                     break;
                 case EVernierSensorType.Conductivity:
-                    TypeIcon.Glyph = "&#xE945";
+                    TypeIcon.Glyph = "\uE945";
                     break;
                 default:
-                    TypeIcon.Glyph = "&#xE9CE";
+                    TypeIcon.Glyph = "\uE9CE";
                     break;
             }
+
+            HorizontalAlignment = HorizontalAlignment.Stretch;
         }
     }
 }

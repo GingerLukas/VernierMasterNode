@@ -42,6 +42,27 @@ namespace VernierMasterNode.UWP
         private void SelectionOnHubSelected(Client client)
         {
             MainFrame.Navigate(typeof(SensorSelection));
+            
+            
+            SensorSelection selection = MainFrame.Content as SensorSelection;
+            selection.SensorSelected += SelectionOnSensorSelected;
+        }
+
+        private void SelectionOnSensorSelected(VernierSensor dropsensor, VernierSensor conductivitysensor)
+        {
+            MainFrame.Navigate(typeof(MeasurementMain));
+            
+            
+            MeasurementMain selection = MainFrame.Content as MeasurementMain;
+            selection.MeasurementFinished += SelectionOnMeasurementFinished;
+        }
+
+        private void SelectionOnMeasurementFinished(List<IndexValuePair> values)
+        {
+            MainFrame.Navigate(typeof(MeasurementResults));
+            
+            
+            MeasurementResults selection = MainFrame.Content as MeasurementResults;
         }
     }
 }
