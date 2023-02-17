@@ -16,6 +16,7 @@ using Windows.UI.Xaml.Navigation;
 using Windows.Web.Http;
 using Microsoft.AspNetCore.SignalR.Client;
 using VernierMasterNode.Shared;
+using VernierMasterNode.UWP.Services;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
@@ -41,6 +42,7 @@ namespace VernierMasterNode.UWP
 
         private void SelectionOnHubSelected(Client client)
         {
+            SensorService.SetClient(client);
             MainFrame.Navigate(typeof(SensorSelection));
             
             

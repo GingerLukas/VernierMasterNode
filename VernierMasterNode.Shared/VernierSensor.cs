@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Text;
 
 namespace VernierMasterNode.Shared
 {
@@ -21,7 +22,16 @@ namespace VernierMasterNode.Shared
         public UInt32 TypicalMeasurementPeriod { get; set; }
         public UInt32 MeasurementPeriodGranularity { get; set; }
         public UInt32 MutualExclusionMask { get; set; }
-        
+
+
+        public UInt64 DeviceId { get; set; }
+
+        public string DeviceIdToText()
+        {
+            return Encoding.ASCII.GetString(BitConverter.GetBytes(DeviceId));
+        }
+
+        /*
         public List<decimal> Values { get; set; } = new List<decimal>();
 
         public void AddValue(int value)
@@ -33,5 +43,6 @@ namespace VernierMasterNode.Shared
         {
             Values.Add(Convert.ToDecimal(value));
         }
+        */
     }
 }

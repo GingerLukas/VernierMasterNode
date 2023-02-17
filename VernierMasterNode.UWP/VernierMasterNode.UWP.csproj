@@ -152,6 +152,8 @@
     <Compile Include="SensorSelectionItem.xaml.cs">
       <DependentUpon>SensorSelectionItem.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Services\HubDiscoveryService.cs" />
+    <Compile Include="Services\SensorService.cs" />
     <Compile Include="VernierClient.xaml.cs">
       <DependentUpon>VernierClient.xaml</DependentUpon>
     </Compile>

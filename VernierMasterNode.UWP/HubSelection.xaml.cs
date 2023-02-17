@@ -8,6 +8,7 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -15,6 +16,7 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using VernierMasterNode.UWP.Services;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -23,67 +25,65 @@ namespace VernierMasterNode.UWP
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class HubSelection : Page, IDisposable
+    public sealed partial class HubSelection : Page
     {
         public delegate void HubSelectedHandler(Client client);
-        public event HubSelectedHandler HubSelected;
-        
-        private readonly Thread _discoveryThread;
-        private readonly UdpClient _udp;
-        private readonly Dictionary<string, DateTime> _discoveredHubs = new Dictionary<string, DateTime>();
 
-        private Client? _currentClient;
-        
-        
+        public event HubSelectedHandler HubSelected;
+
+
+        private Dictionary<string, HubSelectionItem> _elements = new Dictionary<string, HubSelectionItem>();
+
+
         public HubSelection()
         {
             this.InitializeComponent();
-            _discoveryThread = new Thread(DiscoveryLoop);
 
-            _udp = new UdpClient();
-            _udp.Client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
-            _udp.ExclusiveAddressUse = false;
-                
-            _udp.Client.MulticastLoopback = true;
-            _udp.MulticastLoopback = true;
-            _udp.Client.Bind(new IPEndPoint(IPAddress.Any, 2442));
-            _udp.JoinMulticastGroup(IPAddress.Parse("239.244.244.224"));
-
-            _discoveryThread.Start();
-            
-            HubListBox.Children.Add(new HubSelectionItem("192.168.88.20"));
-            HubListBox.Children.Add(new HubSelectionItem("10.10.5.3"));
+            HubDiscoveryService.HubFound += HubDiscoveryServiceOnHubFound;
+            HubDiscoveryService.HubLost += HubDiscoveryServiceOnHubLost;
+            HubDiscoveryService.Start();
         }
 
-        private void DiscoveryLoop()
+        private void HubDiscoveryServiceOnHubLost(string ip, DateTime time)
         {
-            while (true)
+            lock (_elements)
             {
-                IPEndPoint sender = new IPEndPoint(0, 2442);
-                byte[] buffer = _udp.Receive(ref sender);
-                lock (_discoveredHubs)
-                {
-                    _discoveredHubs[sender.Address.ToString()] = DateTime.Now;
-                }
+                Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
+                    () => { HubListBox.Children.Remove(_elements[ip]); });
             }
         }
 
-        public void Dispose()
+        private void HubDiscoveryServiceOnHubFound(string ip, DateTime time)
         {
-            _discoveryThread?.Abort();
+            lock (_elements)
+            {
+                Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
+                    () => { HubListBox.Children.Add(_elements[ip] = new HubSelectionItem(ip) { Name = ip }); });
+            }
         }
+
 
         private void ContinueButton_OnClick(object sender, RoutedEventArgs e)
         {
-            /*
-            if (_currentClient == null)
+            lock (_elements)
             {
-                //TODO: handle no hub selected
-                return;
-            }
-            */
+                //TODO: select last hub connected
+                HubSelectionItem? item = _elements.Values.FirstOrDefault(x => x.Client != null);
+                if (item == null)
+                {
+#if DEBUG
+                    Client client = new Client("localhost");
+                    if (client != null)
+                    {
 
-            HubSelected?.Invoke(_currentClient);
+                        HubSelected?.Invoke(client);
+                    }
+#endif
+                    //TODO: messagebox to show the error
+                    return;
+                }
+                HubSelected?.Invoke(item.Client);
+            }
         }
     }
 }

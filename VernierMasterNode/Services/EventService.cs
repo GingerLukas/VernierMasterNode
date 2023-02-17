@@ -217,6 +217,7 @@ public class EventService : VernierTcpService
                     case EVernierEvent.SensorInfo:
                         serialId = reader.ReadUInt64();
                         VernierSensor sensor = new VernierSensor();
+                        sensor.DeviceId = serialId;
                         sensor.IsInts = reader.ReadByte() != 0;
                         sensor.Number = reader.ReadSByte();
                         sensor.SpareByte = reader.ReadByte();

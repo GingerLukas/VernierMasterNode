@@ -75,9 +75,9 @@ namespace VernierMasterNode.UWP
 
 
             _thread = new Thread(DiscoveryLoop);
-            //_thread.Start();
+            _thread.Start();
 
-            InitClient("192.168.88.50");
+            //InitClient("192.168.88.50");
         }
 
         private void DiscoveryLoop()
