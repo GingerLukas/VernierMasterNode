@@ -61,6 +61,15 @@ namespace VernierMasterNode.UWP
             }
             catch (Exception e)
             {
+                await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
+                {
+                    ContentDialog dialog = new ContentDialog()
+                    {
+                        Title = e.GetType().ToString(),
+                        Content = e.Message
+                    };
+                    await dialog.ShowAsync();
+                });
                 client = null;
             }
 
