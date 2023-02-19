@@ -45,7 +45,7 @@ namespace VernierMasterNode.UWP
             {
                 prev = ConnectButton.Content;
                 ring = new ProgressRing();
-                //ring.Foreground = new SolidColorBrush((Color)Resources.ThemeDictionaries["SystemAccentColorDark3"]);
+                ring.Foreground = new SolidColorBrush((Color)Resources.ThemeDictionaries["SystemAccentColorDark3"]);
                 ConnectButton.Content = ring;
             });
             try
@@ -66,7 +66,9 @@ namespace VernierMasterNode.UWP
                     ContentDialog dialog = new ContentDialog()
                     {
                         Title = e.GetType().ToString(),
-                        Content = e.Message
+                        Content = e.Message,
+                        IsPrimaryButtonEnabled = true,
+                        PrimaryButtonText = "OK"
                     };
                     await dialog.ShowAsync();
                 });

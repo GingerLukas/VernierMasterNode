@@ -35,11 +35,33 @@
                 <TextBlock FontSize="30" HorizontalAlignment="Center">Measurement</TextBlock>
                 <charting:Chart Grid.Row="1" Name="ChartResult">
                     <charting:Chart.Axes>
-                        <charting:LinearAxis Orientation="X" Title="Drops"></charting:LinearAxis>
-                        <charting:LinearAxis Orientation="Y" Title="Conductivity"></charting:LinearAxis>
+                        <charting:LinearAxis Orientation="X" Title="Drops" Name="LinearAxisDrops" ShowGridLines="True"></charting:LinearAxis>
+                        <charting:LinearAxis Orientation="Y" Title="Conductivity" Name="LinearAxisConductivity" ShowGridLines="True"></charting:LinearAxis>
                     </charting:Chart.Axes>
                     <charting:LineSeries Name="LineSeriesMain"
                                          Title="Realtime measurement"
+                                         IndependentValuePath="Index"
+                                         DependentValuePath="Value"
+                                         IsSelectionEnabled="True">
+                        <charting:LineSeries.LegendItemStyle>
+                            <Style TargetType="charting:LegendItem">
+                                <Setter Property="Visibility" Value="Collapsed" />
+                            </Style>
+                        </charting:LineSeries.LegendItemStyle>
+                    </charting:LineSeries>
+                    <charting:LineSeries Name="LineSeriesLeft"
+                                         Title="Left"
+                                         IndependentValuePath="Index"
+                                         DependentValuePath="Value"
+                                         IsSelectionEnabled="True">
+                        <charting:LineSeries.LegendItemStyle>
+                            <Style TargetType="charting:LegendItem">
+                                <Setter Property="Visibility" Value="Collapsed" />
+                            </Style>
+                        </charting:LineSeries.LegendItemStyle>
+                    </charting:LineSeries>
+                    <charting:LineSeries Name="LineSeriesRight"
+                                         Title="Right"
                                          IndependentValuePath="Index"
                                          DependentValuePath="Value"
                                          IsSelectionEnabled="True">
@@ -59,19 +81,22 @@
                 </Grid.RowDefinitions>
                 <TextBlock FontSize="30" HorizontalAlignment="Center">Parameters</TextBlock>
                 <StackPanel Grid.Row="1">
-                    <TextBox InputScope="Number" Header="Drop volume [ml]" Text="0.05" FontSize="20"
+                    <TextBox InputScope="Number" Header="Drop volume [ml]" Text="0.1" FontSize="20"
+                             Name="TextBoxDropVolume"
                              BeforeTextChanging="TextBox_OnBeforeTextChanging"
                              TextChanging="TextBox_OnTextChanging"
                              TextChanged="TextBox_OnTextChanged"
                              CornerRadius="5">
                     </TextBox>
-                    <TextBox InputScope="Number" Header="Solution volume [ml]" Text="100" FontSize="20"
+                    <TextBox InputScope="Number" Header="Solution volume [ml]" Text="10" FontSize="20"
+                             Name="TextBoxSolutionVolume"
                              BeforeTextChanging="TextBox_OnBeforeTextChanging" 
                              TextChanging="TextBox_OnTextChanging"
                              TextChanged="TextBox_OnTextChanged"
                              CornerRadius="5">
                     </TextBox>
-                    <TextBox InputScope="Number" Header="Acid concentration [mol/l]" Text="0.5" FontSize="20"
+                    <TextBox InputScope="Number" Header="Acid concentration [mol/l]" Text="0.9577" FontSize="20"
+                             Name="TextBoxAcidConcentration"
                              BeforeTextChanging="TextBox_OnBeforeTextChanging" 
                              TextChanging="TextBox_OnTextChanging"
                              TextChanged="TextBox_OnTextChanged"
@@ -85,7 +110,7 @@
                     <RowDefinition Height="7*"></RowDefinition>
                 </Grid.RowDefinitions>
                 <TextBlock FontSize="30" HorizontalAlignment="Center">Calculated concentration</TextBlock>
-                <TextBlock Grid.Row="1" FontSize="80" HorizontalAlignment="Center" VerticalAlignment="Center">23.867%</TextBlock>
+                <TextBlock Grid.Row="1" FontSize="50" HorizontalAlignment="Center" VerticalAlignment="Center" Name="TextBlockResult"></TextBlock>
             </Grid>
         </Grid>
         <StackPanel Grid.Row="2" Grid.Column="1" HorizontalAlignment="Right" Orientation="Horizontal" Spacing="15">

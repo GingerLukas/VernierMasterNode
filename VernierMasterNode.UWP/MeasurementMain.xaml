@@ -24,7 +24,7 @@
         <TextBlock FontSize="50" Grid.ColumnSpan="3" Padding="15">Measurement</TextBlock>
         <charting:Chart Grid.Row="1" Grid.Column="1" Name="ChartMain">
             <charting:Chart.Axes>
-                <charting:LinearAxis Orientation="X" Title="Drops">
+                <charting:LinearAxis Orientation="X" Title="Drops" Name="LinearAxisDrops" ShowGridLines="True">
                     <charting:LinearAxis.AxisLabelStyle>
                         <Style TargetType="charting:NumericAxisLabel">
                             <Setter Property="FontSize" Value="15"></Setter>
@@ -37,7 +37,7 @@
                         </Style>
                     </charting:LinearAxis.TitleStyle>
                 </charting:LinearAxis>
-                <charting:LinearAxis Orientation="Y" Title="Conductivity">
+                <charting:LinearAxis Orientation="Y" Title="Conductivity" Name="LinearAxisConductivity" ShowGridLines="True">
                     <charting:LinearAxis.AxisLabelStyle>
                         <Style TargetType="charting:NumericAxisLabel">
                             <Setter Property="FontSize" Value="15"></Setter>
@@ -63,7 +63,12 @@
                 </charting:LineSeries.LegendItemStyle>
             </charting:LineSeries>
         </charting:Chart>
-        <StackPanel Grid.Row="2" Grid.Column="1" HorizontalAlignment="Right">
+        <StackPanel Grid.Row="2" Grid.Column="1" HorizontalAlignment="Left" Orientation="Horizontal">
+            <Button Name="DemoButton" FontSize="24" Click="DemoButton_OnClick" CornerRadius="5">Demo</Button>
+            <ProgressRing IsActive="False" Name="ProgressRingDemo"></ProgressRing>
+        </StackPanel>
+        <StackPanel Grid.Row="2" Grid.Column="1" HorizontalAlignment="Right" Orientation="Horizontal">
+            <ProgressRing IsActive="False" Name="ProgressRingNext"></ProgressRing>
             <Button Name="ContinueButton" FontSize="24" Click="ContinueButton_OnClick" CornerRadius="5">Finish</Button>
         </StackPanel>
     </Grid>

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -12,6 +13,8 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using VernierMasterNode.Shared;
+using VernierMasterNode.UWP.Services;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -22,9 +25,37 @@ namespace VernierMasterNode.UWP
     /// </summary>
     public sealed partial class MeasurementResults : Page
     {
+        private (double x, double y) _intersection;
+        private double _dropVolume;
+        private double _solutionVolume;
+        private double _acidConcentration;
+        private double _result;
+
         public MeasurementResults()
         {
             this.InitializeComponent();
+
+
+            _dropVolume = double.Parse(TextBoxDropVolume.Text);
+            _solutionVolume = double.Parse(TextBoxSolutionVolume.Text);
+            _acidConcentration = double.Parse(TextBoxAcidConcentration.Text);
+        }
+        public void SetSensorInfo(string drops, string conductivity)
+        {
+            LinearAxisDrops.Title = drops;
+            LinearAxisConductivity.Title = conductivity;
+        }
+
+        private IndexValuePair[] _values;
+
+        public IndexValuePair[] Values
+        {
+            get => _values;
+            set
+            {
+                _values = value;
+                ValuesUpdated();
+            }
         }
 
         private void TextBox_OnBeforeTextChanging(TextBox sender, TextBoxBeforeTextChangingEventArgs args)
@@ -37,9 +68,71 @@ namespace VernierMasterNode.UWP
             sender.Text = new String(sender.Text.Where(c => char.IsDigit(c) || c == '.').ToArray());
         }
 
+        private void ValuesUpdated()
+        {
+            Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { LineSeriesMain.ItemsSource = _values; });
+            LinerRegression left = new LinerRegression();
+            LinerRegression right = new LinerRegression();
+
+            double min = Double.MaxValue;
+            int index = -1;
+            for (int i = 0; i < _values.Length; i++)
+            {
+                if (_values[i].Value < min)
+                {
+                    min = _values[i].Value;
+                    index = i;
+                }
+            }
+
+            left.Fit(_values.Take(index + 1).ToArray());
+            right.Fit(_values.Skip(index).ToArray());
+
+            List<IndexValuePair> leftValues = new List<IndexValuePair>();
+            for (int i = 0; i < index + 2; i++)
+            {
+                leftValues.Add(new IndexValuePair(i, left.Predict(i)));
+            }
+
+            List<IndexValuePair> rightValues = new List<IndexValuePair>();
+            for (int i = index - 1; i < _values.Length; i++)
+            {
+                rightValues.Add(new IndexValuePair(i, right.Predict(i)));
+            }
+
+            LineSeriesLeft.ItemsSource = leftValues;
+            LineSeriesRight.ItemsSource = rightValues;
+
+            _intersection = right.Intersection(left);
+
+            Recalculate();
+        }
+
         private void TextBox_OnTextChanged(object sender, TextChangedEventArgs e)
         {
+            _dropVolume = double.Parse(TextBoxDropVolume.Text);
+            _solutionVolume = double.Parse(TextBoxSolutionVolume.Text);
+            _acidConcentration = double.Parse(TextBoxAcidConcentration.Text);
             
+            Recalculate();
+        }
+
+        private void Recalculate()
+        {
+            double totalDropVolume = _dropVolume * _intersection.x;
+            _result = 36.45 * _acidConcentration * totalDropVolume * _solutionVolume;
+
+            TextBlockResult.Text = $"{_result:F4} mg/l";
+        }
+
+
+        private void TextBoxAcidConcentration_OnTextCompositionEnded(TextBox sender, TextCompositionEndedEventArgs args)
+        {
+            _dropVolume = double.Parse(TextBoxDropVolume.Text);
+            _solutionVolume = double.Parse(TextBoxSolutionVolume.Text);
+            _acidConcentration = double.Parse(TextBoxAcidConcentration.Text);
+
+            Recalculate();
         }
     }
 }

@@ -50,21 +50,27 @@ namespace VernierMasterNode.UWP
             selection.SensorSelected += SelectionOnSensorSelected;
         }
 
-        private void SelectionOnSensorSelected(VernierSensor dropsensor, VernierSensor conductivitysensor)
+        private async void SelectionOnSensorSelected(VernierSensor dropsensor, VernierSensor conductivitysensor)
         {
+            SensorService.RegisterForStart("FFAACCAABBFF",dropsensor.DeviceId,dropsensor.Id);
+            SensorService.RegisterForStart("FFAACCAABBFF",conductivitysensor.DeviceId,conductivitysensor.Id);
+            await SensorService.StartSensors();
             MainFrame.Navigate(typeof(MeasurementMain));
             
             
             MeasurementMain selection = MainFrame.Content as MeasurementMain;
+            selection?.SetSensorInfo(dropsensor, conductivitysensor);
             selection.MeasurementFinished += SelectionOnMeasurementFinished;
         }
 
-        private void SelectionOnMeasurementFinished(List<IndexValuePair> values)
+        private void SelectionOnMeasurementFinished(IndexValuePair[] values, string drops, string conductivity)
         {
             MainFrame.Navigate(typeof(MeasurementResults));
             
             
             MeasurementResults selection = MainFrame.Content as MeasurementResults;
+            selection?.SetSensorInfo(drops, conductivity);
+            selection.Values = values;
         }
     }
 }

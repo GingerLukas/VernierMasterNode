@@ -65,25 +65,29 @@ namespace VernierMasterNode.UWP
 
         private void ContinueButton_OnClick(object sender, RoutedEventArgs e)
         {
-            lock (_elements)
+            ProgressRingNext.IsActive = true;
+            Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
-                //TODO: select last hub connected
-                HubSelectionItem? item = _elements.Values.FirstOrDefault(x => x.Client != null);
-                if (item == null)
+                lock (_elements)
                 {
-#if DEBUG
-                    Client client = new Client("localhost");
-                    if (client != null)
+                    //TODO: select last hub connected
+                    HubSelectionItem? item = _elements.Values.FirstOrDefault(x => x.Client != null);
+                    if (item == null)
                     {
-
-                        HubSelected?.Invoke(client);
-                    }
+#if DEBUG
+                        Client client = new Client("localhost");
+                        if (client != null)
+                        {
+                            HubSelected?.Invoke(client);
+                        }
 #endif
-                    //TODO: messagebox to show the error
-                    return;
+                        //TODO: messagebox to show the error
+                        return;
+                    }
+
+                    HubSelected?.Invoke(item.Client);
                 }
-                HubSelected?.Invoke(item.Client);
-            }
+            });
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using VernierMasterNode.Shared;
 
 namespace VernierMasterNode.UWP.Services;
@@ -9,13 +10,17 @@ public static class SensorService
 {
     public delegate void SensorFoundHandler(VernierSensor sensor);
 
+    public delegate void SensorValuesUpdatedHandler(string uid, ulong serialid, uint sensorid,
+        SensorValuesPacket packet);
+
     public static event SensorFoundHandler SensorFound;
+    public static event SensorValuesUpdatedHandler SensorValuesUpdated;
     private static Client _client;
 
     private static Dictionary<uint, List<VernierSensor>> _sensors = new Dictionary<uint, List<VernierSensor>>();
 
-    private static List<(string uid, UInt64 device, UInt32 sensor)> _toStart =
-        new List<(string uid, ulong device, uint sensor)>();
+    private static HashSet<(string uid, UInt64 device, UInt32 sensor)> _toStart =
+        new HashSet<(string uid, ulong device, uint sensor)>();
 
     public static void SetClient(Client client)
     {
@@ -26,6 +31,15 @@ public static class SensorService
         _client.OnSensorInfo += ClientOnOnSensorInfo;
         _client.OnSensorValuesUpdated += ClientOnOnSensorValuesUpdated;
         _client.OnScanStopped += ClientOnOnScanStopped;
+        _client.OnSensorStarted += ClientOnOnSensorStarted;
+    }
+
+    private static void ClientOnOnSensorStarted(string uid, ulong serialid, uint sensorid)
+    {
+        lock (_toStart)
+        {
+            _toStart.Remove((uid, serialid, sensorid));
+        }
     }
 
     public static async void Start()
@@ -41,10 +55,10 @@ public static class SensorService
     private static void ClientOnOnSensorValuesUpdated(string uid, ulong serialid, uint sensorid,
         SensorValuesPacket packet)
     {
-        throw new NotImplementedException();
+        SensorValuesUpdated?.Invoke(uid, serialid, sensorid, packet);
     }
 
-    public static async void StartSensors()
+    public static async Task StartSensors()
     {
         string[] array;
         lock (_toStart)
@@ -55,6 +69,23 @@ public static class SensorService
         foreach (string uid in array)
         {
             await _client.StopScan(uid);
+        }
+
+        while (true)
+        {
+            int len = 0;
+            lock (_toStart)
+            {
+                len = _toStart.Count;
+            }
+
+
+            if (len == 0)
+            {
+                break;
+            }
+
+            await Task.Delay(1);
         }
     }
 

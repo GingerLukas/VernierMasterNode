@@ -20,13 +20,19 @@ namespace VernierMasterNode.UWP
 {
     public sealed partial class SensorSelectionItem : UserControl
     {
-        public SensorSelectionItem(string name,EVernierSensorType sensorType)
+        public VernierSensor Sensor { get; set; }
+
+        public delegate void SelectedHandler(SensorSelectionItem item);
+
+        public event SelectedHandler Selected;
+        public SensorSelectionItem(VernierSensor sensor)
         {
+            Sensor = sensor;
             this.InitializeComponent();
 
 
-            SerialNumber.Text = name;
-            switch (sensorType)
+            SerialNumber.Text = sensor.DeviceIdToText();
+            switch ((EVernierSensorType)sensor.Id)
             {
                 case EVernierSensorType.Drop:
                     TypeIcon.Glyph = "\uEB42";
@@ -40,6 +46,16 @@ namespace VernierMasterNode.UWP
             }
 
             HorizontalAlignment = HorizontalAlignment.Stretch;
+        }
+
+        public void SetActive(bool value)
+        {
+            StatusIcon.Symbol = value ? Symbol.Accept : Symbol.Add;
+        }
+
+        private void SelectButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            Selected?.Invoke(this);
         }
     }
 }

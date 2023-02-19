@@ -20,7 +20,7 @@
 
         <TextBlock Grid.Column="1" FontSize="20" Name="SerialNumber" VerticalAlignment="Center" Padding="5 0 0 0"></TextBlock>
 
-        <Button Grid.Column="2" Name="SelectButton" Background="{ThemeResource SystemAccentColor}" CornerRadius="5">
+        <Button Grid.Column="2" Name="SelectButton" Click="SelectButton_OnClick" Background="{ThemeResource SystemAccentColor}" CornerRadius="5">
             <SymbolIcon Name="StatusIcon" Symbol="Add" Foreground="Black"></SymbolIcon>
         </Button>
     </Grid>
