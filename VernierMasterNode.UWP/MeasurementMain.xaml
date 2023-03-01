@@ -64,9 +64,14 @@
             </charting:LineSeries>
         </charting:Chart>
         <StackPanel Grid.Row="2" Grid.Column="1" HorizontalAlignment="Left" Orientation="Horizontal">
-            <Button Name="DemoButton" FontSize="24" Click="DemoButton_OnClick" CornerRadius="5">Demo</Button>
             <ProgressRing IsActive="False" Name="ProgressRingDemo"></ProgressRing>
+            <Button Name="DemoButton" FontSize="24" Click="DemoButton_OnClick" CornerRadius="5">Demo</Button>
         </StackPanel>
+        
+        <StackPanel Grid.Row="2" Grid.Column="1" HorizontalAlignment="Center" Orientation="Horizontal">
+            <Button Name="ClearButton" FontSize="24" Click="ClearButton_OnClick" CornerRadius="5">Clear</Button>
+        </StackPanel>
+        
         <StackPanel Grid.Row="2" Grid.Column="1" HorizontalAlignment="Right" Orientation="Horizontal">
             <ProgressRing IsActive="False" Name="ProgressRingNext"></ProgressRing>
             <Button Name="ContinueButton" FontSize="24" Click="ContinueButton_OnClick" CornerRadius="5">Finish</Button>

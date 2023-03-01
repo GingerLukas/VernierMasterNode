@@ -25,11 +25,17 @@ namespace VernierMasterNode.UWP
     /// </summary>
     public sealed partial class MeasurementResults : Page
     {
+        public delegate void RestartHandler(VernierSensor drop, VernierSensor conductivity);
+
+        public event RestartHandler Restart;
+
         private (double x, double y) _intersection;
         private double _dropVolume;
-        private double _solutionVolume;
+        private double _dilutionFactor;
         private double _acidConcentration;
         private double _result;
+        private VernierSensor _dropSensor;
+        private VernierSensor _conductivitySensor;
 
         public MeasurementResults()
         {
@@ -37,13 +43,17 @@ namespace VernierMasterNode.UWP
 
 
             _dropVolume = double.Parse(TextBoxDropVolume.Text);
-            _solutionVolume = double.Parse(TextBoxSolutionVolume.Text);
+            _dilutionFactor = double.Parse(TextBoxDilutionFactor.Text);
             _acidConcentration = double.Parse(TextBoxAcidConcentration.Text);
         }
-        public void SetSensorInfo(string drops, string conductivity)
+
+        public void SetSensorInfo(VernierSensor drops, VernierSensor conductivity)
         {
-            LinearAxisDrops.Title = drops;
-            LinearAxisConductivity.Title = conductivity;
+            _dropSensor = drops;
+            _conductivitySensor = conductivity;
+
+            LinearAxisDrops.Title = $"{drops.Description} [{drops.Unit}]";
+            LinearAxisConductivity.Title = $"{conductivity.Description} [{conductivity.Unit}]";
         }
 
         private IndexValuePair[] _values;
@@ -111,16 +121,17 @@ namespace VernierMasterNode.UWP
         private void TextBox_OnTextChanged(object sender, TextChangedEventArgs e)
         {
             _dropVolume = double.Parse(TextBoxDropVolume.Text);
-            _solutionVolume = double.Parse(TextBoxSolutionVolume.Text);
+            _dilutionFactor = double.Parse(TextBoxDilutionFactor.Text);
             _acidConcentration = double.Parse(TextBoxAcidConcentration.Text);
-            
+
             Recalculate();
         }
 
         private void Recalculate()
         {
             double totalDropVolume = _dropVolume * _intersection.x;
-            _result = 36.45 * _acidConcentration * totalDropVolume * _solutionVolume;
+            _result = 36.45 * _acidConcentration * totalDropVolume *
+                      _dilutionFactor; //zredovaci faktor isto solution volume (delusion factor)
 
             TextBlockResult.Text = $"{_result:F4} mg/l";
         }
@@ -129,10 +140,15 @@ namespace VernierMasterNode.UWP
         private void TextBoxAcidConcentration_OnTextCompositionEnded(TextBox sender, TextCompositionEndedEventArgs args)
         {
             _dropVolume = double.Parse(TextBoxDropVolume.Text);
-            _solutionVolume = double.Parse(TextBoxSolutionVolume.Text);
+            _dilutionFactor = double.Parse(TextBoxDilutionFactor.Text);
             _acidConcentration = double.Parse(TextBoxAcidConcentration.Text);
 
             Recalculate();
+        }
+
+        private void RestartButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            Restart?.Invoke(_dropSensor, _conductivitySensor);
         }
     }
 }

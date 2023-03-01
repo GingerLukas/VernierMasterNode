@@ -26,12 +26,14 @@ namespace VernierMasterNode.UWP
     /// </summary>
     public sealed partial class MeasurementMain : Page
     {
-        public delegate void MeasurementFinishedHandler(IndexValuePair[] values,string drops, string conductivity);
+        public delegate void MeasurementFinishedHandler(IndexValuePair[] values, VernierSensor drops, VernierSensor conductivity);
 
         public event MeasurementFinishedHandler MeasurementFinished;
         private readonly ObservableCollection<IndexValuePair> _values;
 
         private decimal? _lastConductivity = null;
+        private VernierSensor _dropSensor;
+        private VernierSensor _conductivitySensor;
 
         public MeasurementMain()
         {
@@ -43,6 +45,9 @@ namespace VernierMasterNode.UWP
 
         public void SetSensorInfo(VernierSensor drops, VernierSensor conductivity)
         {
+            _dropSensor = drops;
+            _conductivitySensor = conductivity;
+            
             LinearAxisDrops.Title = $"{drops.Description} [{drops.Unit}]";
             LinearAxisConductivity.Title = $"{conductivity.Description} [{conductivity.Unit}]";
         }
@@ -72,8 +77,7 @@ namespace VernierMasterNode.UWP
             await Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
                 () =>
                 {
-                    MeasurementFinished?.Invoke(_values.ToArray(),(string)LinearAxisDrops.Title, (string)LinearAxisConductivity.Title);
-                    
+                    MeasurementFinished?.Invoke(_values.ToArray(), _dropSensor, _conductivitySensor);
                 });
         }
 
@@ -135,8 +139,13 @@ namespace VernierMasterNode.UWP
                 _values.Add(new IndexValuePair(_values.Count, 5.3));
                 _values.Add(new IndexValuePair(_values.Count, 5.37));
             });
-            
+
             ProgressRingDemo.IsActive = false;
+        }
+
+        private void ClearButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { _values.Clear(); });
         }
     }
 }
