@@ -29,6 +29,94 @@
           </mappings>
         </serverdata>
       </paths>
+      <paths name="pi">
+        <serverdata>
+          <mappings>
+            <mapping local="$PROJECT_DIR$/VernierMasterNode.sln" web="/" />
+            <mapping local="$PROJECT_DIR$/VernierMasterNode/VernierMasterNode.csproj" web="/" />
+            <mapping local="$PROJECT_DIR$/VernierMasterNode.Shared/VernierMasterNode.Shared.csproj" web="/" />
+            <mapping local="$PROJECT_DIR$/VernierMasterNode.UWP/VernierMasterNode.UWP.csproj" web="/" />
+            <mapping local="$PROJECT_DIR$/VernierMasterNode/Controllers/VernierController.cs" web="/" />
+            <mapping local="$PROJECT_DIR$/VernierMasterNode/Hubs/RealtimeHub.cs" web="/" />
+            <mapping local="$PROJECT_DIR$/VernierMasterNode/Services/CommandService.cs" web="/" />
+            <mapping local="$PROJECT_DIR$/VernierMasterNode/Services/DeviceService.cs" web="/" />
+            <mapping local="$PROJECT_DIR$/VernierMasterNode/Services/EventService.cs" web="/" />
+            <mapping local="$PROJECT_DIR$/VernierMasterNode/Services/HearBeatService.cs" web="/" />
+            <mapping local="$PROJECT_DIR$/VernierMasterNode/Services/SensorService.cs" web="/" />
+            <mapping local="$PROJECT_DIR$/VernierMasterNode/Services/VernierTcpService.cs" web="/" />
+            <mapping local="$PROJECT_DIR$/VernierMasterNode/Services/VernierUdpService.cs" web="/" />
+            <mapping local="$PROJECT_DIR$/VernierMasterNode/Properties/launchSettings.json" web="/" />
+            <mapping local="$PROJECT_DIR$/VernierMasterNode/obj/Debug/net7.0/VernierMasterNode.GlobalUsings.g.cs" web="/" />
+            <mapping local="$PROJECT_DIR$/VernierMasterNode/obj/Debug/net7.0/VernierMasterNode.AssemblyInfo.cs" web="/" />
+            <mapping local="$PROJECT_DIR$/VernierMasterNode/obj/Debug/net7.0/VernierMasterNode.GeneratedMSBuildEditorConfig.editorconfig" web="/" />
+            <mapping local="$PROJECT_DIR$/../../../../Program Files/dotnet/sdk/7.0.200-preview.22628.1/Sdks/Microsoft.NET.Sdk.Razor/source-generators/RazorSourceGenerator.razorencconfig" web="/" />
+            <mapping local="$PROJECT_DIR$/VernierMasterNode/Program.cs" web="/" />
+            <mapping local="$PROJECT_DIR$/VernierMasterNode/appsettings.Development.json" web="/" />
+            <mapping local="$PROJECT_DIR$/VernierMasterNode/appsettings.json" web="/" />
+            <mapping local="$PROJECT_DIR$/VernierMasterNode.Shared/obj/Debug/netstandard2.0/VernierMasterNode.Shared.AssemblyInfo.cs" web="/" />
+            <mapping local="$PROJECT_DIR$/VernierMasterNode.Shared/obj/Debug/netstandard2.0/VernierMasterNode.Shared.GeneratedMSBuildEditorConfig.editorconfig" web="/" />
+            <mapping local="$PROJECT_DIR$/VernierMasterNode.Shared/EspDevice.cs" web="/" />
+            <mapping local="$PROJECT_DIR$/VernierMasterNode.Shared/EVernierSensorType.cs" web="/" />
+            <mapping local="$PROJECT_DIR$/VernierMasterNode.Shared/IRealtimeClient.cs" web="/" />
+            <mapping local="$PROJECT_DIR$/VernierMasterNode.Shared/SensorValuesPacket.cs" web="/" />
+            <mapping local="$PROJECT_DIR$/VernierMasterNode.Shared/VernierDevice.cs" web="/" />
+            <mapping local="$PROJECT_DIR$/VernierMasterNode.Shared/VernierSensor.cs" web="/" />
+            <mapping local="$PROJECT_DIR$/VernierMasterNode.UWP/Properties/AssemblyInfo.cs" web="/" />
+            <mapping local="$PROJECT_DIR$/VernierMasterNode.UWP/Properties/Default.rd.xml" web="/" />
+            <mapping local="$PROJECT_DIR$/VernierMasterNode.UWP/Assets/LockScreenLogo.scale-200.png" web="/" />
+            <mapping local="$PROJECT_DIR$/VernierMasterNode.UWP/Assets/SplashScreen.scale-200.png" web="/" />
+            <mapping local="$PROJECT_DIR$/VernierMasterNode.UWP/Assets/Square150x150Logo.scale-200.png" web="/" />
+            <mapping local="$PROJECT_DIR$/VernierMasterNode.UWP/Assets/Square44x44Logo.scale-200.png" web="/" />
+            <mapping local="$PROJECT_DIR$/VernierMasterNode.UWP/Assets/Square44x44Logo.targetsize-24_altform-unplated.png" web="/" />
+            <mapping local="$PROJECT_DIR$/VernierMasterNode.UWP/Assets/StoreLogo.png" web="/" />
+            <mapping local="$PROJECT_DIR$/VernierMasterNode.UWP/Assets/Wide310x150Logo.scale-200.png" web="/" />
+            <mapping local="$PROJECT_DIR$/VernierMasterNode.UWP/obj/x64/Debug/App.g.i.cs" web="/" />
+            <mapping local="$PROJECT_DIR$/VernierMasterNode.UWP/obj/x64/Debug/App.g.cs" web="/" />
+            <mapping local="$PROJECT_DIR$/VernierMasterNode.UWP/obj/x64/Debug/MainPage.g.i.cs" web="/" />
+            <mapping local="$PROJECT_DIR$/VernierMasterNode.UWP/obj/x64/Debug/MainPage.g.cs" web="/" />
+            <mapping local="$PROJECT_DIR$/VernierMasterNode.UWP/obj/x64/Debug/VernierClient.g.i.cs" web="/" />
+            <mapping local="$PROJECT_DIR$/VernierMasterNode.UWP/obj/x64/Debug/VernierClient.g.cs" web="/" />
+            <mapping local="$PROJECT_DIR$/VernierMasterNode.UWP/obj/x64/Debug/XamlTypeInfo.g.cs" web="/" />
+            <mapping local="$PROJECT_DIR$/VernierMasterNode.UWP/obj/x64/Debug/HubSelection.g.i.cs" web="/" />
+            <mapping local="$PROJECT_DIR$/VernierMasterNode.UWP/obj/x64/Debug/HubSelection.g.cs" web="/" />
+            <mapping local="$PROJECT_DIR$/VernierMasterNode.UWP/obj/x64/Debug/SensorSelection.g.i.cs" web="/" />
+            <mapping local="$PROJECT_DIR$/VernierMasterNode.UWP/obj/x64/Debug/SensorSelection.g.cs" web="/" />
+            <mapping local="$PROJECT_DIR$/VernierMasterNode.UWP/obj/x64/Debug/SensorSelectionItem.g.i.cs" web="/" />
+            <mapping local="$PROJECT_DIR$/VernierMasterNode.UWP/obj/x64/Debug/SensorSelectionItem.g.cs" web="/" />
+            <mapping local="$PROJECT_DIR$/VernierMasterNode.UWP/obj/x64/Debug/HubSelectionItem.g.i.cs" web="/" />
+            <mapping local="$PROJECT_DIR$/VernierMasterNode.UWP/obj/x64/Debug/HubSelectionItem.g.cs" web="/" />
+            <mapping local="$PROJECT_DIR$/VernierMasterNode.UWP/obj/x64/Debug/MeasurementMain.g.i.cs" web="/" />
+            <mapping local="$PROJECT_DIR$/VernierMasterNode.UWP/obj/x64/Debug/MeasurementMain.g.cs" web="/" />
+            <mapping local="$PROJECT_DIR$/VernierMasterNode.UWP/obj/x64/Debug/MeasurementResults.g.i.cs" web="/" />
+            <mapping local="$PROJECT_DIR$/VernierMasterNode.UWP/obj/x64/Debug/MeasurementResults.g.cs" web="/" />
+            <mapping local="$PROJECT_DIR$/VernierMasterNode.UWP/Client.cs" web="/" />
+            <mapping local="$PROJECT_DIR$/VernierMasterNode.UWP/IndexValuePair.cs" web="/" />
+            <mapping local="$PROJECT_DIR$/VernierMasterNode.UWP/Package.appxmanifest" web="/" />
+            <mapping local="$PROJECT_DIR$/VernierMasterNode.UWP/App.xaml" web="/" />
+            <mapping local="$PROJECT_DIR$/VernierMasterNode.UWP/MainPage.xaml" web="/" />
+            <mapping local="$PROJECT_DIR$/VernierMasterNode.UWP/VernierClient.xaml" web="/" />
+            <mapping local="$PROJECT_DIR$/VernierMasterNode.UWP/VernierMasterNode.UWP_TemporaryKey.pfx" web="/" />
+            <mapping local="$PROJECT_DIR$/VernierMasterNode.UWP/HubSelection.xaml" web="/" />
+            <mapping local="$PROJECT_DIR$/VernierMasterNode.UWP/SensorSelection.xaml" web="/" />
+            <mapping local="$PROJECT_DIR$/VernierMasterNode.UWP/SensorSelectionItem.xaml" web="/" />
+            <mapping local="$PROJECT_DIR$/VernierMasterNode.UWP/HubSelectionItem.xaml" web="/" />
+            <mapping local="$PROJECT_DIR$/VernierMasterNode.UWP/MeasurementMain.xaml" web="/" />
+            <mapping local="$PROJECT_DIR$/VernierMasterNode.UWP/MeasurementResults.xaml" web="/" />
+            <mapping local="$PROJECT_DIR$/VernierMasterNode.UWP/App.xaml.cs" web="/" />
+            <mapping local="$PROJECT_DIR$/VernierMasterNode.UWP/MainPage.xaml.cs" web="/" />
+            <mapping local="$PROJECT_DIR$/VernierMasterNode.UWP/VernierClient.xaml.cs" web="/" />
+            <mapping local="$PROJECT_DIR$/VernierMasterNode.UWP/HubSelection.xaml.cs" web="/" />
+            <mapping local="$PROJECT_DIR$/VernierMasterNode.UWP/SensorSelection.xaml.cs" web="/" />
+            <mapping local="$PROJECT_DIR$/VernierMasterNode.UWP/SensorSelectionItem.xaml.cs" web="/" />
+            <mapping local="$PROJECT_DIR$/VernierMasterNode.UWP/HubSelectionItem.xaml.cs" web="/" />
+            <mapping local="$PROJECT_DIR$/VernierMasterNode.UWP/MeasurementMain.xaml.cs" web="/" />
+            <mapping local="$PROJECT_DIR$/VernierMasterNode.UWP/MeasurementResults.xaml.cs" web="/" />
+            <mapping local="$PROJECT_DIR$/VernierMasterNode.UWP/Services/HubDiscoveryService.cs" web="/" />
+            <mapping local="$PROJECT_DIR$/VernierMasterNode.UWP/Services/SensorService.cs" web="/" />
+            <mapping local="$PROJECT_DIR$" web="/" />
+          </mappings>
+        </serverdata>
+      </paths>
     </serverData>
   </component>
 </project>

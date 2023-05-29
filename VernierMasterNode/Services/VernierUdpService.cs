@@ -22,7 +22,7 @@ public class VernierUdpService : IDisposable
 
     private void TimerCallback(object? state)
     {
-        SendUdpBroadcast();
+        SendUdpBroadcast();     
     }
 
     private void SendUdpBroadcast()

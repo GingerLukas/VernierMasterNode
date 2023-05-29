@@ -4,9 +4,12 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Net;
+using System.Net.Sockets;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text;
+using System.Threading;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
@@ -42,6 +45,9 @@ namespace VernierMasterNode.UWP
         private ulong _deviceYserial = 0;
         private VernierSensor? _deviceY;
 
+        private readonly UdpClient _udp;
+        private readonly Thread _thread;
+
 
         public VernierClient()
         {
@@ -51,7 +57,42 @@ namespace VernierMasterNode.UWP
             SetStatus(TextDropCountStatus, "Not Found");
 
             LineSeries.ItemsSource = _values;
-            _client = new Client();
+
+            
+            
+
+            _udp = new UdpClient();
+            _udp.Client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
+            _udp.ExclusiveAddressUse = false;
+                
+            _udp.Client.MulticastLoopback = true;
+            _udp.MulticastLoopback = true;
+            
+            _udp.Client.Bind(new IPEndPoint(IPAddress.Any, 2442));
+            _udp.JoinMulticastGroup(IPAddress.Parse("239.244.244.224"),IPAddress.Any);
+            
+            
+
+
+            _thread = new Thread(DiscoveryLoop);
+            _thread.Start();
+
+            //InitClient("192.168.88.50");
+        }
+
+        private void DiscoveryLoop()
+        {
+            while (_client == null)
+            {
+                IPEndPoint sender = new IPEndPoint(0, 2442);
+                byte[] buffer = _udp.Receive(ref sender);
+                InitClient(sender.Address.ToString());
+            }
+        }
+
+        private void InitClient(string address)
+        {
+            _client = new Client(address);
             _client.OnEspDeviceConnected += ClientOnOnEspDeviceConnected;
             _client.OnDeviceFound += ClientOnOnDeviceFound;
             _client.OnSensorInfo += ClientOnOnSensorInfo;

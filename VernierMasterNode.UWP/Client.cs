@@ -11,9 +11,9 @@ public class Client : IRealtimeClient
 {
     private HubConnection _connection;
 
-    public Client()
+    public Client(string address)
     {
-        _connection = new HubConnectionBuilder().WithUrl(new Uri("http://127.0.0.1:5153/Realtime"))
+        _connection = new HubConnectionBuilder().WithUrl(new Uri($"http://{address}:5153/Realtime"))
             .WithAutomaticReconnect().Build();
         
         _connection.On<string>(nameof(IRealtimeClient.EspDeviceConnected), EspDeviceConnected);

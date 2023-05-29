@@ -133,7 +133,7 @@ public class DeviceService
     private void ParserCallback(object? state)
     {
         _devicesLock.AcquireReaderLock(-1);
-        List<EspDevice> devices = _espDevices.Values.ToList();
+        EspDevice[] devices = _espDevices.Values.ToArray();
         _devicesLock.ReleaseReaderLock();
         Parallel.ForEach(devices, (device) => { device.ParsePending(); });
     }
@@ -142,7 +142,7 @@ public class DeviceService
     private void HeartBeatCallback(object? state)
     {
         _devicesLock.AcquireReaderLock(-1);
-        List<EspDevice> devices = _espDevices.Values.ToList();
+        EspDevice[] devices = _espDevices.Values.ToArray();
         _devicesLock.ReleaseReaderLock();
         Parallel.ForEach(devices, device =>
         {

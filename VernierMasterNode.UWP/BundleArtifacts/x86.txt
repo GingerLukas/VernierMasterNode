@@ -1,0 +1,2 @@
+MainPackage=C:\Users\lukas\RiderProjects\VernierMasterNode\VernierMasterNode.UWP\bin\x86\Release\VernierMasterNode.UWP_1.1.3.0_x86.msix
+SymbolPackage=C:\Users\lukas\RiderProjects\VernierMasterNode\VernierMasterNode.UWP\obj\x86\Release\Symbols\VernierMasterNode.UWP_1.1.3.0_x86.appxsym
